@@ -1,0 +1,40 @@
+<h3>{{title}}</h3>
+
+<button (click)="clearModel()">Clear model</button>
+<button (click)="resetModel()">Reset model</button>
+
+<form [formGroup]="rootForm">
+  <h4>Person</h4>
+  <ul>
+    <li>
+      <label for="name">Name:</label>
+      <input id="name" name="name" type="text" formControlName="name"/>
+    </li>
+    <li>
+      <label for="age">Age:</label>
+      <input id="age" name="age" type="number" formControlName="age"/>
+    </li>
+    <li>
+      <label for="birthday">Birthday:</label>
+      <input id="birthday" name="birthday" type="date" formControlName="birthday"/>
+    </li>
+
+    <li formGroupName="address">
+      <h4>
+        <input type="checkbox" [(ngModel)]="viewModel.address.expanded" [ngModelOptions]="{standalone: true}"/>
+        Address
+      </h4>
+      <ul *ngIf="viewModel.address.expanded">
+        <li>
+          <label for="city">City:</label>
+          <input id="city" name="city" type="text" formControlName="city"/>
+        </li>
+        <li>
+          <label for="street">Street:</label>
+          <input id="street" name="street" type="text" formControlName="street"/>
+        </li>
+      </ul>
+    </li>
+
+  </ul>
+</form>
