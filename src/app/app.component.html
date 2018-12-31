@@ -1,40 +1,27 @@
 <h3>{{title}}</h3>
-
+<input id="dirty" type="radio" disabled [value]="true" [ngModel]="rootForm.dirty"/>
+<label for="dirty">dirty</label>
+<input id="invalid" type="radio" disabled [value]="true" [ngModel]="rootForm.invalid"/>
+<label for="invalid">invalid</label>
+<input id="touched" type="radio" disabled [value]="true" [ngModel]="rootForm.touched"/>
+<label for="touched">touched</label>
+<br>
+<input id="readonly" type="checkbox" [(ngModel)]="readonly"/>
+<label for="readonly">Readonly</label>
+<br>
 <button (click)="clearModel()">Clear model</button>
 <button (click)="resetModel()">Reset model</button>
+<button (click)="resetViewState()">Reset view state</button>
 
-<form [formGroup]="rootForm">
-  <h4>Person</h4>
-  <ul>
-    <li>
-      <label for="name">Name:</label>
-      <input id="name" name="name" type="text" formControlName="name"/>
-    </li>
-    <li>
-      <label for="age">Age:</label>
-      <input id="age" name="age" type="number" formControlName="age"/>
-    </li>
-    <li>
-      <label for="birthday">Birthday:</label>
-      <input id="birthday" name="birthday" type="date" formControlName="birthday"/>
-    </li>
-
-    <li formGroupName="address">
-      <h4>
-        <input type="checkbox" [(ngModel)]="viewModel.address.expanded" [ngModelOptions]="{standalone: true}"/>
-        Address
-      </h4>
-      <ul *ngIf="viewModel.address.expanded">
-        <li>
-          <label for="city">City:</label>
-          <input id="city" name="city" type="text" formControlName="city"/>
-        </li>
-        <li>
-          <label for="street">Street:</label>
-          <input id="street" name="street" type="text" formControlName="street"/>
-        </li>
-      </ul>
-    </li>
-
-  </ul>
-</form>
+<section>
+  <form [formGroup]="rootForm">
+    <app-prop-complex
+      [schema]="schema"
+      [formGroup]="rootForm"
+      [viewState]="viewState"
+      [readonly]="readonly"
+    ></app-prop-complex>
+  </form>
+  <pre>{{formModel | json}}</pre>
+  <pre>{{viewStateSnapshot | json}}</pre>
+</section>

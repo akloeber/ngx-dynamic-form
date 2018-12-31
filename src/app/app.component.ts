@@ -1,45 +1,42 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-
-const MODEL = {
-  name: 'Max Mustermann',
-  age: 42,
-  birthday: '1990-12-21',
-  address: {
-    city: 'Bonn',
-    street: 'Adenauerallee'
-  }
-};
+import {AfterViewChecked, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {SchemaFormBuilderService} from './schema-form-builder.service';
+import {MODEL} from './model';
+import {SCHEMA} from './schema';
+import {SFSchema} from './schema-types';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  providers: [
+    SchemaFormBuilderService,
+  ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewChecked {
 
   title = 'ngx-dynamic-form';
+  readonly = false;
   rootForm: FormGroup;
-  viewModel = {
-    address: {
-      expanded: true,
-    },
-  };
+  schema: SFSchema;
+  viewState: any;
+  viewStateSnapshot: any;
 
-  constructor() {
-    this.rootForm = new FormGroup({
-      name: new FormControl(undefined),
-      age: new FormControl(undefined),
-      birthday: new FormControl(undefined),
-      address: new FormGroup({
-        city: new FormControl(undefined),
-        street: new FormControl(undefined),
-      })
-    });
+  constructor(
+    private cd: ChangeDetectorRef,
+    private schemaFormBuilderService: SchemaFormBuilderService,
+  ) {
+  }
+
+  get formModel() {
+    return this.rootForm.getRawValue();
   }
 
   ngOnInit(): void {
-    this.resetModel();
+    this.viewState = {};
+    this.schema = SCHEMA;
+    this.rootForm = this.schemaFormBuilderService.createFormControl(this.schema, MODEL) as FormGroup;
+    this.rootForm.setValue(MODEL);
+
   }
 
   resetModel() {
@@ -48,5 +45,14 @@ export class AppComponent implements OnInit {
 
   clearModel() {
     this.rootForm.reset();
+  }
+
+  resetViewState() {
+    this.viewState = {};
+  }
+
+  ngAfterViewChecked(): void {
+    this.viewStateSnapshot = JSON.parse(JSON.stringify(this.viewState));
+    this.cd.detectChanges();
   }
 }

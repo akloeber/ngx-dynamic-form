@@ -1,0 +1,36 @@
+<ng-container [formGroup]="formGroup">
+  <h3>
+    <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
+    {{description}}
+    <ng-content select="button"></ng-content>
+  </h3>
+  <ul *ngIf="viewState.expanded">
+    <ng-template [ngForOf]="properties" let-prop ngFor>
+      <li *ngIf="widgetForProperty(prop.schema) as widget" [ngSwitch]="widget">
+        <app-prop-simple
+          *ngSwitchCase="'SIMPLE'"
+          [formGroup]="formGroup"
+          [key]="prop.key"
+          [readonly]="viewState.readonly"
+          [schema]="prop.schema"
+          [viewState]="viewState.properties[prop.key]"
+        ></app-prop-simple>
+        <app-prop-array
+          *ngSwitchCase="'ARRAY'"
+          [formGroup]="formGroup"
+          [key]="prop.key"
+          [readonly]="viewState.readonly"
+          [schema]="prop.schema"
+          [viewState]="viewState.properties[prop.key]"
+        ></app-prop-array>
+        <app-prop-complex
+          *ngSwitchCase="'COMPLEX'"
+          [formGroup]="formGroup.get(prop.key)"
+          [readonly]="viewState.readonly"
+          [schema]="prop.schema"
+          [viewState]="viewState.properties[prop.key]"
+        ></app-prop-complex>
+      </li>
+    </ng-template>
+  </ul>
+</ng-container>

@@ -3,10 +3,16 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AppComponent} from './app.component';
+import {PropSimpleComponent} from './prop-simple/prop-simple.component';
+import {PropArrayComponent} from './prop-array/prop-array.component';
+import {PropComplexComponent} from './prop-complex/prop-complex.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PropSimpleComponent,
+    PropArrayComponent,
+    PropComplexComponent,
   ],
   imports: [
     BrowserModule,

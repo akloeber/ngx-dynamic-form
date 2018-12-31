@@ -4,6 +4,30 @@
   box-sizing: border-box;
 }
 
+html {
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+section {
+  display: flex;
+  flex-direction: row;
+}
+
+pre {
+  flex: 1;
+}
+
+form {
+  flex: none;
+  width: 300px;
+}
+
+h4 {
+  margin-top: .5em;
+  margin-bottom: .5em;
+}
+
 label {
   display: inline-block;
   width: 5em;
@@ -13,10 +37,24 @@ input:not[type=checkbox] {
   width: 12em;
 }
 
+input[disabled] {
+  color: gray;
+  background-color: lightgray;
+}
+
+button[disabled] {
+  color: gray;
+  background-color: lightgray;
+}
+
 ul {
   list-style-type: none;
 }
 
 li {
   margin-bottom: .5em;
+}
+
+.ng-invalid {
+  border-color: red;
 }

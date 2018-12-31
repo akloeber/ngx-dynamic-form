@@ -1,0 +1,20 @@
+<ng-container [formGroup]="formGroup">
+  <h3>
+    <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
+    {{schema.description}}
+    <button (click)="addItem()" [disabled]="items.length >= maxOccurs">Add</button>
+  </h3>
+  <ul *ngIf="viewState.expanded" [formArrayName]="key">
+    <li *ngFor="let item of items.controls; let idx=index">
+      <app-prop-complex
+        [formGroup]="item"
+        [index]="idx"
+        [schema]="schema.items"
+        [viewState]="viewState.items[idx]"
+      >
+        <button (click)="removeItem(idx)" [disabled]="items.length <= minOccurs">
+          Remove {{items.length}} {{minOccurs}}</button>
+      </app-prop-complex>
+    </li>
+  </ul>
+</ng-container>

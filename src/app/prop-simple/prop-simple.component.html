@@ -1,0 +1,9 @@
+<ng-container [formGroup]="formGroup">
+  <label [for]="key">{{description}}</label>
+  <ng-container [ngSwitch]="inputType">
+    <input *ngSwitchCase="'hidden'" [formControlName]="key" [id]="key" type="hidden"/>
+    <input *ngSwitchCase="'number'" [formControlName]="key" [id]="key" type="number"/>
+    <input *ngSwitchCase="'date'" [formControlName]="key" [id]="key" type="date"/>
+    <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" type="text"/>
+  </ng-container>
+</ng-container>
