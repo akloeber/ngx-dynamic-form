@@ -3,6 +3,17 @@ import {SFPropComplex} from './schema-types';
 export const SCHEMA: SFPropComplex = {
   type: 'object',
   description: 'Person',
+  controls: [
+    {
+      type: 'AddressPicker',
+      config: {
+        mapping: {
+          city: 'address.city',
+          street: 'address.street',
+        }
+      },
+    },
+  ],
   properties: {
     title: {
       type: 'string',
@@ -12,6 +23,7 @@ export const SCHEMA: SFPropComplex = {
     name: {
       type: 'string',
       description: 'Name',
+      readonly: true,
     },
     age: {
       type: 'number',
@@ -31,7 +43,6 @@ export const SCHEMA: SFPropComplex = {
       description: 'Address',
       properties: {
         city: {
-          readonly: true,
           type: 'string',
           description: 'City',
         },

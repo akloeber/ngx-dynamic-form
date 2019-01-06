@@ -90,4 +90,13 @@ export class PropComplexComponent implements OnChanges {
         return PropWidget.SIMPLE;
     }
   }
+
+  merge(model: any, mappingConfig: Record<string, string>) {
+    Object.entries(mappingConfig)
+      .forEach(([field, target]) => {
+        const control = this.formGroup.get(target);
+        control.setValue(model[field]);
+        control.disable();
+      });
+  }
 }

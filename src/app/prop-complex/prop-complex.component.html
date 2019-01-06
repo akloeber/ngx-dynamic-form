@@ -2,6 +2,12 @@
   <h3>
     <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
     {{description}}
+    <ng-template [ngForOf]="schema.controls" let-control ngFor>
+      <ng-container [ngSwitch]="control.type">
+        <app-address-picker (addressPicked)="merge($event, control.config.mapping)"
+                            *ngSwitchCase="'AddressPicker'"></app-address-picker>
+      </ng-container>
+    </ng-template>
     <ng-content select="button"></ng-content>
   </h3>
   <ul *ngIf="viewState.expanded">

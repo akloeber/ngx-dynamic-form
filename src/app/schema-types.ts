@@ -1,6 +1,6 @@
-// type DT_TYPE = 'object' | 'string' | 'boolean' | 'array';
-// type DT_DATATYPE = 'string' | 'date';
-// type DT_WIDGET = 'radio' | 'multi-select' | 'select' | 'date' | 'hidden';
+// TODO: datatype == string is not necessary as it can be expressed via type
+// TODO: fix typo in targetPLz
+// TODO: move filter config for control into config
 
 export type SFProp =
   SFPropSimple |
@@ -32,7 +32,6 @@ interface SFPropBase {
 }
 
 type DT_SF_PROP_SIMPLE_TYPE = 'string' | 'number';
-// TODO: datatype == string is not necessary as it can be expressed via type
 type DT_SF_PROP_SIMPLE_DATATYPE = 'date' | 'string';
 type DT_SF_PROP_SIMPLE_WIDGET = 'hidden' | 'date';
 type DT_SF_CHOICE_WIDGET = 'radio' | 'multi-select' | 'select';

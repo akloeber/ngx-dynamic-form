@@ -6,6 +6,7 @@ import {AppComponent} from './app.component';
 import {PropSimpleComponent} from './prop-simple/prop-simple.component';
 import {PropArrayComponent} from './prop-array/prop-array.component';
 import {PropComplexComponent} from './prop-complex/prop-complex.component';
+import { AddressPickerComponent } from './control-nationality-picker/address-picker.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import {PropComplexComponent} from './prop-complex/prop-complex.component';
     PropSimpleComponent,
     PropArrayComponent,
     PropComplexComponent,
+    AddressPickerComponent,
   ],
   imports: [
     BrowserModule,
