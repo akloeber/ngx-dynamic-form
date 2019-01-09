@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-address-picker',
@@ -6,17 +7,51 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class AddressPickerComponent implements OnInit {
 
-  @Input() config: any;
+  @Input() config: {
+    mapping: Record<string, string>;
+  };
+  @Input() formGroup: FormGroup;
 
-  @Output() addressPicked = new EventEmitter<any>();
+  ngOnInit(): void {
+    console.log(this.config, this.formGroup);
 
-  ngOnInit() {
   }
 
-  pickAddress(): void {
-    this.addressPicked.emit({
+  get linked() {
+    return this.formGroup.get(this.config.mapping.id).value !== null;
+  }
+
+  onClick() {
+    if (this.linked) {
+      this.unlink();
+    } else {
+      this.link();
+    }
+  }
+
+  private link(): void {
+    const address = {
+      id: 123,
       city: 'Köln',
       street: 'Hauptstrasse',
-    });
+    };
+
+    Object.entries(this.config.mapping)
+      .forEach(([field, target]) => {
+        const control = this.formGroup.get(target);
+        control.setValue(address[field]);
+        control.disable();
+      });
+  }
+
+  private unlink() {
+    this.formGroup.get(this.config.mapping.id).reset(null);
+
+    Object.entries(this.config.mapping)
+      .forEach(([field, target]) => {
+        const control = this.formGroup.get(target);
+        control.enable();
+      });
+
   }
 }

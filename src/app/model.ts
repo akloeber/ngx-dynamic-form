@@ -5,8 +5,8 @@ export const MODEL = {
   age: 42,
   birthday: '1990-12-21',
   nationalities: ['DE', 'FR'],
-  hidden: 'secret',
   address: {
+    id: null,
     city: 'Bonn',
     street: 'Adenauerallee'
   },

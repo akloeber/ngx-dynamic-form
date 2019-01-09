@@ -4,8 +4,7 @@
     {{description}}
     <ng-template [ngForOf]="schema.controls" let-control ngFor>
       <ng-container [ngSwitch]="control.type">
-        <app-address-picker (addressPicked)="merge($event, control.config.mapping)"
-                            *ngSwitchCase="'AddressPicker'"></app-address-picker>
+        <app-address-picker *ngSwitchCase="'AddressPicker'" [formGroup]="formGroup" [config]="control.config"></app-address-picker>
       </ng-container>
     </ng-template>
     <ng-content select="button"></ng-content>

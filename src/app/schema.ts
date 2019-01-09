@@ -8,6 +8,7 @@ export const SCHEMA: SFPropComplex = {
       type: 'AddressPicker',
       config: {
         mapping: {
+          id: 'address.id',
           city: 'address.city',
           street: 'address.street',
         }
@@ -54,14 +55,14 @@ export const SCHEMA: SFPropComplex = {
         {text: 'France', value: 'FR'}
       ],
     },
-    hidden: {
-      type: 'string',
-      widget: 'hidden',
-    },
     address: {
       type: 'object',
       description: 'Address',
       properties: {
+        id: {
+          type: 'number',
+          widget: 'hidden',
+        },
         city: {
           type: 'string',
           description: 'City',
