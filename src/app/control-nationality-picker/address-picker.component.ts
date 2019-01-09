@@ -1,21 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-address-picker',
   templateUrl: './address-picker.component.html',
 })
-export class AddressPickerComponent implements OnInit {
+export class AddressPickerComponent {
 
   @Input() config: {
     mapping: Record<string, string>;
   };
   @Input() formGroup: FormGroup;
-
-  ngOnInit(): void {
-    console.log(this.config, this.formGroup);
-
-  }
 
   get linked() {
     return this.formGroup.get(this.config.mapping.id).value !== null;

@@ -51,6 +51,12 @@ export class PropSimpleComponent implements OnChanges {
       }
     }
 
+    if (changes.viewState) {
+      if (this.viewState.readonly === undefined) {
+        this.viewState.readonly = this.readonly || isReadonly(this.schema);
+      }
+    }
+
     if (changes.readonly) {
       this.viewState.readonly = this.readonly || isReadonly(this.schema);
       if (this.viewState.readonly) {

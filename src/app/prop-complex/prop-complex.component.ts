@@ -51,6 +51,10 @@ export class PropComplexComponent implements OnChanges {
     }
 
     if (changes.viewState) {
+      if (this.viewState.readonly === undefined) {
+        this.viewState.readonly = this.readonly || isReadonly(this.schema);
+      }
+
       if (this.viewState.expanded === undefined) {
         this.viewState.expanded = this.schema.initialView !== 'collapsed';
       }
@@ -89,14 +93,5 @@ export class PropComplexComponent implements OnChanges {
       default:
         return PropWidget.SIMPLE;
     }
-  }
-
-  merge(model: any, mappingConfig: Record<string, string>) {
-    Object.entries(mappingConfig)
-      .forEach(([field, target]) => {
-        const control = this.formGroup.get(target);
-        control.setValue(model[field]);
-        control.disable();
-      });
   }
 }

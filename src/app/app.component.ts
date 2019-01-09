@@ -36,15 +36,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
     this.schema = SCHEMA;
     this.rootForm = this.schemaFormBuilderService.createFormControl(this.schema, MODEL) as FormGroup;
     this.rootForm.setValue(MODEL);
-
   }
 
   resetModel() {
-    this.rootForm.reset(MODEL);
-  }
-
-  clearModel() {
-    this.rootForm.reset();
+    this.rootForm.patchValue(MODEL);
   }
 
   resetViewState() {
