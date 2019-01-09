@@ -49,10 +49,13 @@ export const SCHEMA: SFPropComplex = {
       type: 'string',
       widget: 'multi-select',
       description: 'Nationalities',
+      minOccurs: 2,
+      maxOccurs: 3,
       anyOf: [
         {text: 'Italy', value: 'IT'},
         {text: 'Germany', value: 'DE'},
-        {text: 'France', value: 'FR'}
+        {text: 'France', value: 'FR'},
+        {text: 'Spain', value: 'ES'}
       ],
     },
     address: {

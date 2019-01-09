@@ -10,8 +10,8 @@
 
     <ng-container *ngSwitchCase="'radio'">
       <ng-template [ngForOf]="schema.anyOf" let-option let-id="index" ngFor>
-        <label [for]="key + id">{{option.text}}</label>
         <input  [formControlName]="key" [id]="key + id" type="radio" [value]="option.value"/>
+        <label [for]="key + id">{{option.text}}</label>
       </ng-template>
     </ng-container>
 

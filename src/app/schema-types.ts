@@ -78,6 +78,23 @@ export interface SfPropChoiceStringMasterData extends SFPropBase {
 
 export type SFSchema = SFProp;
 
+export type SFInputType = 'text' | 'number' | 'date' | 'radio' | 'select' | 'multi-select' | 'hidden';
+
+export function getInputType(schema: SFPropSimple): SFInputType {
+  const type = schema.widget || schema.datatype || schema.type;
+  switch (type) {
+    case 'date':
+    case 'number':
+    case 'radio':
+    case 'select':
+    case 'multi-select':
+      return type;
+    default:
+      return 'text';
+  }
+}
+
+
 export function isRequired(prop: SFProp): boolean {
   return prop.minOccurs !== 0;
 }
@@ -86,14 +103,14 @@ export function isReadonly(prop: SFProp): boolean {
   return prop.readonly === true;
 }
 
-export function maxOccurs(prop: SFPropArray): number {
+export function getMaxOccurs(prop: SFPropArray | SFPropSimple): number {
   if (prop.maxOccurs === 'unbounded') {
     return Number.POSITIVE_INFINITY;
   }
   return prop.maxOccurs !== undefined ? prop.maxOccurs : Number.POSITIVE_INFINITY;
 }
 
-export function minOccurs(prop: SFPropArray): number {
+export function getMinOccurs(prop: SFPropArray | SFPropSimple): number {
   return prop.minOccurs !== undefined ? prop.minOccurs : 0;
 }
 

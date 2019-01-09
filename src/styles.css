@@ -2,6 +2,7 @@
 
 * {
   box-sizing: border-box;
+  outline: none;
 }
 
 html {
@@ -32,7 +33,7 @@ label {
   display: inline-block;
 }
 
-label:first-of-type {
+section label:first-of-type {
   vertical-align: top;
   width: 7em;
 }
@@ -41,8 +42,8 @@ input:not[type=checkbox] {
   width: 12em;
 }
 
-input[type=radio] + label {
-  margin-left: .5em;
+input[type=radio] ~ input[type=radio] {
+  margin-left: 1em;
 }
 
 input[disabled] {

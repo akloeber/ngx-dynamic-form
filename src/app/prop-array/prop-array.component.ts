@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {maxOccurs, minOccurs, SFPropArray} from '../schema-types';
+import {getMaxOccurs, getMinOccurs, SFPropArray} from '../schema-types';
 import {FormArray, FormGroup} from '@angular/forms';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
 
@@ -47,8 +47,8 @@ export class PropArrayComponent implements OnChanges {
     }
 
     if (changes.schema) {
-      this.maxOccurs = maxOccurs(this.schema);
-      this.minOccurs = minOccurs(this.schema);
+      this.maxOccurs = getMaxOccurs(this.schema);
+      this.minOccurs = getMinOccurs(this.schema);
 
       // remove superfluous items
       while (this.items.length > this.maxOccurs) {

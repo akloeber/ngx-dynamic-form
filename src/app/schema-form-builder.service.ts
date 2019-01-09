@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {getMaxLength, getMinLength, isRequired, SFProp, SFPropSimple} from './schema-types';
+import {getInputType, getMaxLength, getMaxOccurs, getMinLength, getMinOccurs, isRequired, SFProp, SFPropSimple} from './schema-types';
 import {AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {CustomValidators} from 'src/app/custom-validators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,15 +40,32 @@ export class SchemaFormBuilderService {
       validators.push(Validators.required);
     }
 
-    const minLength = getMinLength(schema);
-    if (minLength > 0) {
-      validators.push(Validators.minLength(minLength));
+    switch (getInputType(schema)) {
+      case 'text':
+        const minLength = getMinLength(schema);
+        if (minLength > 0) {
+          validators.push(Validators.minLength(minLength));
+        }
+
+        const maxLength = getMaxLength(schema);
+        if (maxLength < Number.POSITIVE_INFINITY) {
+          validators.push(Validators.maxLength(maxLength));
+        }
+        break;
+      case 'multi-select':
+        const minOccurs = getMinOccurs(schema);
+        if (minOccurs > 0) {
+          validators.push(CustomValidators.minItems(minOccurs));
+        }
+
+        const maxOccurs = getMaxOccurs(schema);
+        if (maxOccurs < Number.POSITIVE_INFINITY) {
+          validators.push(CustomValidators.maxItems(maxOccurs));
+        }
+
+        break;
     }
 
-    const maxLength = getMaxLength(schema);
-    if (maxLength < Number.POSITIVE_INFINITY) {
-      validators.push(Validators.maxLength(maxLength));
-    }
     return validators;
   }
 }

@@ -1,8 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {getMaxLength, isReadonly, isRequired, SFPropSimple} from '../schema-types';
+import {getInputType, getMaxLength, isReadonly, isRequired, SFInputType, SFPropSimple} from '../schema-types';
 import {FormControl, FormGroup} from '@angular/forms';
-
-type InputType = 'text' | 'number' | 'date' | 'radio' | 'select' | 'multi-select' | 'hidden';
 
 @Component({
   selector: 'app-prop-simple',
@@ -22,18 +20,8 @@ export class PropSimpleComponent implements OnChanges {
   maxLength: number;
   description: string;
 
-  get inputType(): InputType {
-    const type = this.schema.widget || this.schema.datatype || this.schema.type;
-    switch (type) {
-      case 'date':
-      case 'number':
-      case 'radio':
-      case 'select':
-      case 'multi-select':
-        return type;
-      default:
-        return 'text';
-    }
+  get inputType(): SFInputType {
+    return getInputType(this.schema);
   }
 
   get formControl(): FormControl {
