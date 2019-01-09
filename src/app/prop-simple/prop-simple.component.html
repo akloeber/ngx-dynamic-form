@@ -16,7 +16,11 @@
     </ng-container>
 
     <select *ngSwitchCase="'select'" [formControlName]="key">
-      <option *ngFor="let option of schema.anyOf" [value]="option.value">{{option.text}}</option>
+      <option *ngFor="let option of schema.anyOf" [ngValue]="option.value">{{option.text}}</option>
+    </select>
+
+    <select *ngSwitchCase="'multi-select'" [formControlName]="key" multiple>
+      <option *ngFor="let option of schema.anyOf" [ngValue]="option.value">{{option.text}}</option>
     </select>
 
     <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" type="text"/>

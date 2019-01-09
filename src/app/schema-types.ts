@@ -33,7 +33,7 @@ interface SFPropBase {
 
 type DT_SF_PROP_SIMPLE_TYPE = 'string' | 'number';
 type DT_SF_PROP_SIMPLE_DATATYPE = 'date' | 'string';
-type DT_SF_PROP_SIMPLE_WIDGET = 'hidden' | 'date' | 'radio' | 'select';
+type DT_SF_PROP_SIMPLE_WIDGET = 'hidden' | 'date' | 'radio' | 'select' | 'multi-select';
 type DT_SF_CHOICE_WIDGET = 'radio' | 'multi-select' | 'select';
 
 export interface SFPropSimple extends SFPropBase {

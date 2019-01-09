@@ -4,6 +4,7 @@ export const MODEL = {
   name: 'Max Mustermann',
   age: 42,
   birthday: '1990-12-21',
+  nationalities: ['DE', 'FR'],
   hidden: 'secret',
   address: {
     city: 'Bonn',

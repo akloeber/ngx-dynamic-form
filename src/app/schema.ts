@@ -44,6 +44,16 @@ export const SCHEMA: SFPropComplex = {
       datatype: 'date',
       description: 'Birthday',
     },
+    nationalities: {
+      type: 'string',
+      widget: 'multi-select',
+      description: 'Nationalities',
+      anyOf: [
+        {text: 'Italy', value: 'IT'},
+        {text: 'Germany', value: 'DE'},
+        {text: 'France', value: 'FR'}
+      ],
+    },
     hidden: {
       type: 'string',
       widget: 'hidden',

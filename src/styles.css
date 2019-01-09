@@ -33,7 +33,8 @@ label {
 }
 
 label:first-of-type {
-  width: 5em;
+  vertical-align: top;
+  width: 7em;
 }
 
 input:not[type=checkbox] {
