@@ -1,15 +1,25 @@
 <ng-container [formGroup]="formGroup">
   <label [for]="key">{{description}}</label>
   <ng-container [ngSwitch]="inputType">
+
     <input *ngSwitchCase="'hidden'" [formControlName]="key" [id]="key" type="hidden"/>
+
     <input *ngSwitchCase="'number'" [formControlName]="key" [id]="key" type="number"/>
+
     <input *ngSwitchCase="'date'" [formControlName]="key" [id]="key" type="date"/>
+
     <ng-container *ngSwitchCase="'radio'">
       <ng-template [ngForOf]="schema.anyOf" let-option let-id="index" ngFor>
         <label [for]="key + id">{{option.text}}</label>
         <input  [formControlName]="key" [id]="key + id" type="radio" [value]="option.value"/>
       </ng-template>
     </ng-container>
+
+    <select *ngSwitchCase="'select'" [formControlName]="key">
+      <option *ngFor="let option of schema.anyOf" [value]="option.value">{{option.text}}</option>
+    </select>
+
     <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" type="text"/>
+
   </ng-container>
 </ng-container>

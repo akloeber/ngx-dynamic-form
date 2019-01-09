@@ -12,5 +12,6 @@ export const MODEL = {
   employers: [
     {company: 'GFT Technologies SE', country: 'DE'},
     {company: 'Capgemini SE', country: 'FR'},
-  ]
+  ],
+  channel: 'SMS',
 };

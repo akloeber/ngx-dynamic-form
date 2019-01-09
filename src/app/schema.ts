@@ -85,6 +85,16 @@ export const SCHEMA: SFPropComplex = {
           }
         }
       }
-    }
+    },
+    channel: {
+      type: 'string',
+      widget: 'select',
+      description: 'Channel',
+      anyOf: [
+        {text: 'Email', value: 'EMAIL'},
+        {text: 'SMS', value: 'SMS'},
+        {text: 'Letter', value: 'LETTER'}
+      ],
+    },
   },
 };
