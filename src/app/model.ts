@@ -1,4 +1,5 @@
 export const MODEL = {
+  sex: 'M',
   title: null,
   name: 'Max Mustermann',
   age: 42,

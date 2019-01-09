@@ -15,6 +15,16 @@ export const SCHEMA: SFPropComplex = {
     },
   ],
   properties: {
+    sex: {
+      type: 'string',
+      widget: 'radio',
+      description: 'Sex',
+      anyOf: [
+        {text: 'Male', value: 'M'},
+        {text: 'Female', value: 'F'},
+        {text: 'Div.', value: 'D'}
+      ],
+    },
     title: {
       type: 'string',
       description: 'Title',
