@@ -65,6 +65,7 @@ export const SCHEMA: SFPropComplex = {
         id: {
           type: 'number',
           widget: 'hidden',
+          minOccurs: 0,
         },
         city: {
           type: 'string',
@@ -80,7 +81,7 @@ export const SCHEMA: SFPropComplex = {
       type: 'array',
       description: 'Employers',
       initialView: 'collapsed',
-      minOccurs: 3,
+      minOccurs: 2,
       maxOccurs: 4,
       items: {
         type: 'object',

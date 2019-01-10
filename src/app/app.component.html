@@ -1,9 +1,9 @@
 <h3>{{title}}</h3>
-<input id="dirty" type="radio" disabled [value]="true" [ngModel]="rootForm.dirty"/>
+<input id="dirty" type="radio" disabled [value]="true" [ngModel]="rootControl.dirty"/>
 <label for="dirty">dirty</label>
-<input id="invalid" type="radio" disabled [value]="true" [ngModel]="rootForm.invalid"/>
+<input id="invalid" type="radio" disabled [value]="true" [ngModel]="rootControl.invalid"/>
 <label for="invalid">invalid</label>
-<input id="touched" type="radio" disabled [value]="true" [ngModel]="rootForm.touched"/>
+<input id="touched" type="radio" disabled [value]="true" [ngModel]="rootControl.touched"/>
 <label for="touched">touched</label>
 <br>
 <input id="readonly" type="checkbox" [(ngModel)]="readonly"/>
@@ -13,10 +13,10 @@
 <button (click)="resetViewState()">Reset view state</button>
 
 <section>
-  <form [formGroup]="rootForm">
+  <form [formGroup]="rootControl">
     <app-prop-complex
       [schema]="schema"
-      [formGroup]="rootForm"
+      [formGroup]="rootControl"
       [viewState]="viewState"
       [readonly]="readonly"
     ></app-prop-complex>

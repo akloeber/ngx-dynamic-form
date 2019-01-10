@@ -1,9 +1,10 @@
 import {AfterViewChecked, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, Form, FormGroup} from '@angular/forms';
 import {SchemaFormBuilderService} from './schema-form-builder.service';
 import {MODEL} from './model';
 import {SCHEMA} from './schema';
 import {SFSchema} from './schema-types';
+import {collectErrors} from './form-utils';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   title = 'ngx-dynamic-form';
   readonly = false;
-  rootForm: FormGroup;
+  rootControl: FormGroup;
   schema: SFSchema;
   viewState: any;
   viewStateSnapshot: any;
@@ -28,18 +29,22 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   get formModel() {
-    return this.rootForm.getRawValue();
+    return this.rootControl.getRawValue();
   }
 
   ngOnInit(): void {
     this.viewState = {};
     this.schema = SCHEMA;
-    this.rootForm = this.schemaFormBuilderService.createFormControl(this.schema, MODEL) as FormGroup;
-    this.rootForm.setValue(MODEL);
+    this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, MODEL) as FormGroup;
+    this.rootControl.setValue(MODEL);
+
+    setInterval(() => {
+      console.log(this.rootControl.invalid, collectErrors(this.rootControl));
+    }, 2000);
   }
 
   resetModel() {
-    this.rootForm.patchValue(MODEL);
+    this.rootControl.patchValue(MODEL);
   }
 
   resetViewState() {
