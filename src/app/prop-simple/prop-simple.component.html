@@ -9,7 +9,7 @@
     <input *ngSwitchCase="'date'" [formControlName]="key" [id]="key" type="date"/>
 
     <ng-container *ngSwitchCase="'radio'">
-      <ng-template [ngForOf]="schema.anyOf" let-option let-id="index" ngFor>
+      <ng-template [ngForOf]="schema.oneOf || schema.anyOf" let-option let-id="index" ngFor>
         <input  [formControlName]="key" [id]="key + id" type="radio" [value]="option.value"/>
         <label [for]="key + id">{{option.text}}</label>
       </ng-template>

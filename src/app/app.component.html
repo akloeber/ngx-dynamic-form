@@ -2,7 +2,7 @@
 <input id="dirty" type="radio" disabled [value]="true" [ngModel]="rootControl.dirty"/>
 <label for="dirty">dirty</label>
 <input id="invalid" type="radio" disabled [value]="true" [ngModel]="rootControl.invalid"/>
-<label for="invalid">invalid</label>
+<label for="invalid" [attr.title]="errorsSnapshot ? (errorsSnapshot | json) : undefined">invalid</label>
 <input id="touched" type="radio" disabled [value]="true" [ngModel]="rootControl.touched"/>
 <label for="touched">touched</label>
 <br>

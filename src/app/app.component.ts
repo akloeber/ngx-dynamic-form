@@ -21,6 +21,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   schema: SFSchema;
   viewState: any;
   viewStateSnapshot: any;
+  errorsSnapshot: any;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -37,10 +38,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
     this.schema = SCHEMA;
     this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, MODEL) as FormGroup;
     this.rootControl.setValue(MODEL);
-
-    setInterval(() => {
-      console.log(this.rootControl.invalid, collectErrors(this.rootControl));
-    }, 2000);
   }
 
   resetModel() {
@@ -53,6 +50,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.viewStateSnapshot = JSON.parse(JSON.stringify(this.viewState));
+    this.errorsSnapshot = JSON.parse(JSON.stringify(collectErrors(this.rootControl)));
     this.cd.detectChanges();
   }
 }

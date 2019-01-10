@@ -1,6 +1,7 @@
-// TODO: datatype == string is not necessary as it can be expressed via type
+// TODO: datatype === 'string' is not necessary as it can be expressed via type
 // TODO: fix typo in targetPLz
 // TODO: move filter config for control into config
+// TODO: use oneOf insteaof anyOf for radio groups / choices
 
 export type SFProp =
   SFPropSimple |
@@ -43,6 +44,7 @@ export interface SFPropSimple extends SFPropBase {
   widget?: DT_SF_PROP_SIMPLE_WIDGET;
   default?: string | number;
   anyOf?: Array<ChoiceOption<any>>;
+  oneOf?: Array<ChoiceOption<any>>;
   pattern?: string;
 }
 

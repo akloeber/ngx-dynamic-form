@@ -20,7 +20,7 @@ export const SCHEMA: SFPropComplex = {
       type: 'string',
       widget: 'radio',
       description: 'Sex',
-      anyOf: [
+      oneOf: [
         {text: 'Male', value: 'M'},
         {text: 'Female', value: 'F'},
         {text: 'Div.', value: 'D'}
