@@ -16,7 +16,7 @@
           *ngSwitchCase="'SIMPLE'"
           [formGroup]="formGroup"
           [key]="prop.key"
-          [readonly]="viewState.readonly"
+          [readonlyMode]="readonlyMode"
           [schema]="prop.schema"
           [viewState]="viewState.properties[prop.key]"
         ></app-prop-simple>
@@ -24,14 +24,14 @@
           *ngSwitchCase="'ARRAY'"
           [formGroup]="formGroup"
           [key]="prop.key"
-          [readonly]="viewState.readonly"
+          [readonlyMode]="readonlyMode"
           [schema]="prop.schema"
           [viewState]="viewState.properties[prop.key]"
         ></app-prop-array>
         <app-prop-complex
           *ngSwitchCase="'COMPLEX'"
           [formGroup]="formGroup.get(prop.key)"
-          [readonly]="viewState.readonly"
+          [readonlyMode]="readonlyMode"
           [schema]="prop.schema"
           [viewState]="viewState.properties[prop.key]"
         ></app-prop-complex>

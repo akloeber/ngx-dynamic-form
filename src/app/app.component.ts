@@ -16,7 +16,7 @@ import {collectErrors} from './form-utils';
 export class AppComponent implements OnInit, AfterViewChecked {
 
   title = 'ngx-dynamic-form';
-  readonly = false;
+  readonlyMode = false;
   rootControl: FormGroup;
   schema: SFSchema;
   viewState: any;

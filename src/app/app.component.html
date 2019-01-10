@@ -6,8 +6,8 @@
 <input id="touched" type="radio" disabled [value]="true" [ngModel]="rootControl.touched"/>
 <label for="touched">touched</label>
 <br>
-<input id="readonly" type="checkbox" [(ngModel)]="readonly"/>
-<label for="readonly">Readonly</label>
+<input id="readonly" type="checkbox" [(ngModel)]="readonlyMode"/>
+<label for="readonly">Readonly mode</label>
 <br>
 <button (click)="resetModel()">Reset model</button>
 <button (click)="resetViewState()">Reset view state</button>
@@ -18,7 +18,7 @@
       [schema]="schema"
       [formGroup]="rootControl"
       [viewState]="viewState"
-      [readonly]="readonly"
+      [readonlyMode]="readonlyMode"
     ></app-prop-complex>
   </form>
   <pre>{{formModel | json}}</pre>

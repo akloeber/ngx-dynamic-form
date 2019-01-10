@@ -24,13 +24,12 @@ export class PropComplexComponent implements OnChanges {
   @Input() schema: SFPropComplex;
   @Input() viewState: {
     expanded: boolean;
-    readonly: boolean;
     properties: {
       [propKey: string]: any;
     }
   };
   @Input() index?: number;
-  @Input() readonly?: boolean;
+  @Input() readonlyMode?: boolean;
 
   properties: Array<PropDescriptor> = [];
 
@@ -51,10 +50,6 @@ export class PropComplexComponent implements OnChanges {
     }
 
     if (changes.viewState) {
-      if (this.viewState.readonly === undefined) {
-        this.viewState.readonly = this.readonly || isReadonly(this.schema);
-      }
-
       if (this.viewState.expanded === undefined) {
         this.viewState.expanded = this.schema.initialView !== 'collapsed';
       }
@@ -68,15 +63,6 @@ export class PropComplexComponent implements OnChanges {
           this.viewState.properties[prop.key] = {};
         }
       });
-    }
-
-    if (changes.readonly) {
-      this.viewState.readonly = this.readonly || isReadonly(this.schema);
-      if (this.viewState.readonly) {
-        this.formGroup.disable();
-      } else {
-        this.formGroup.enable();
-      }
     }
   }
 

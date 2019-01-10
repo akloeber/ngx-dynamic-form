@@ -10,6 +10,7 @@
         [formGroup]="item"
         [index]="idx"
         [schema]="schema.items"
+        [readonlyMode]="readonlyMode"
         [viewState]="viewState.items[idx]"
       >
         <button (click)="removeItem(idx)" [disabled]="items.length <= minOccurs">

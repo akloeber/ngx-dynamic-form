@@ -17,7 +17,7 @@ export class PropArrayComponent implements OnChanges {
     expanded: boolean;
     items: Array<any>;
   }>;
-  @Input() readonly?: boolean;
+  @Input() readonlyMode?: boolean;
 
   maxOccurs: number;
   minOccurs: number;
