@@ -30,6 +30,7 @@ export const SCHEMA: SFPropComplex = {
       type: 'string',
       description: 'Title',
       minOccurs: 0,
+      explanation: 'Value must not container characters other than letters, blank or dot',
       pattern : '[a-zA-Z .]*',
     },
     name: {
@@ -62,6 +63,7 @@ export const SCHEMA: SFPropComplex = {
     address: {
       type: 'object',
       description: 'Address',
+      explanation: 'Activate checkbox to expand address details',
       properties: {
         id: {
           type: 'number',
@@ -81,6 +83,7 @@ export const SCHEMA: SFPropComplex = {
     employers: {
       type: 'array',
       description: 'Employers',
+      explanation: 'Activate checkbox to expand list of employers',
       initialView: 'collapsed',
       minOccurs: 2,
       maxOccurs: 4,

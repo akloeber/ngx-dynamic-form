@@ -1,5 +1,5 @@
 <ng-container [formGroup]="formGroup">
-  <h3>
+  <h3 [attr.title]="schema.explanation">
     <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
     {{description}}
     <ng-template [ngForOf]="schema.controls" let-control ngFor>

@@ -1,4 +1,4 @@
-<ng-container [formGroup]="formGroup">
+<div [formGroup]="formGroup" [attr.title]="schema.explanation">
   <label [for]="key">{{description}}</label>
   <ng-container [ngSwitch]="inputType">
 
@@ -26,4 +26,4 @@
     <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" [pattern]="schema.pattern" type="text"/>
 
   </ng-container>
-</ng-container>
+</div>

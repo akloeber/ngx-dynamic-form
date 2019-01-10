@@ -20,6 +20,7 @@ interface SFPropBase {
   datatype?: string;
   widget?: string;
   description?: string;
+  explanation?: string;
   minLength?: number;
   maxLength?: number;
   minOccurs?: number;
