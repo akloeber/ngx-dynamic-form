@@ -23,7 +23,7 @@
       <option *ngFor="let option of schema.anyOf" [ngValue]="option.value">{{option.text}}</option>
     </select>
 
-    <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" type="text"/>
+    <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" [pattern]="schema.pattern" type="text"/>
 
   </ng-container>
 </ng-container>

@@ -30,6 +30,7 @@ export const SCHEMA: SFPropComplex = {
       type: 'string',
       description: 'Title',
       minOccurs: 0,
+      pattern : '[a-zA-Z .]*',
     },
     name: {
       type: 'string',

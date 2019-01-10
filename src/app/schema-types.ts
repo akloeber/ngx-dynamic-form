@@ -42,6 +42,7 @@ export interface SFPropSimple extends SFPropBase {
   widget?: DT_SF_PROP_SIMPLE_WIDGET;
   default?: string | number;
   anyOf?: Array<ChoiceOption<any>>;
+  pattern?: string;
 }
 
 export interface SFPropArray extends SFPropBase {
