@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {isReadonly, SFProp, SFPropComplex} from '../schema-types';
+import {isExpanded, isReadonly, SFProp, SFPropComplex} from '../schema-types';
 import {FormGroup} from '@angular/forms';
 
 enum PropWidget {
@@ -47,22 +47,6 @@ export class PropComplexComponent implements OnChanges {
       this.properties = Object
         .entries(this.schema.properties)
         .reduce((acc, [key, schema]) => [...acc, {key, schema}], []);
-    }
-
-    if (changes.viewState) {
-      if (this.viewState.expanded === undefined) {
-        this.viewState.expanded = this.schema.initialView !== 'collapsed';
-      }
-
-      if (this.viewState.properties === undefined) {
-        this.viewState.properties = {};
-      }
-
-      this.properties.forEach(prop => {
-        if (this.viewState.properties[prop.key] === undefined) {
-          this.viewState.properties[prop.key] = {};
-        }
-      });
     }
   }
 

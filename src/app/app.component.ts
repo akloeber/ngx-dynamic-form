@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {SchemaFormBuilderService} from './schema-form-builder.service';
 import {MODEL} from './model';
 import {SCHEMA} from './schema';
 import {SFModel, SFSchema} from './schema-types';
 import {SchemaFormComponent} from './schema-form/schema-form.component';
+import {collectErrors} from './form-utils';
 
 @Component({
   selector: 'app-root',
@@ -18,16 +19,18 @@ export class AppComponent implements OnInit {
 
   readonlyMode = false;
   schema: SFSchema;
-  model: SFModel;
+  initialModel: SFModel;
   formModel: SFModel;
-  errorsSnapshot: any;
+  readonlyModel: SFModel;
 
   constructor(
+    private cd: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.schema = SCHEMA;
-    this.model = MODEL;
+    this.initialModel = MODEL;
+    this.readonlyModel = MODEL;
 
     this.schemaForm.dirtyChanged.subscribe(dirty => {
       console.log('dirtyChanged', dirty);
@@ -36,15 +39,17 @@ export class AppComponent implements OnInit {
       console.log('statusChanged', dirty);
     });
     this.schemaForm.modelChanged.subscribe(model => {
-      console.log('modelChanged', JSON.stringify(model, null, 2));
+      console.log('modelChanged here', model);
+      this.readonlyModel = model;
+      this.cd.markForCheck();
     });
   }
 
   reloadModel() {
-    if (this.model !== MODEL) {
-      this.model = MODEL;
+    if (this.initialModel !== MODEL) {
+      this.initialModel = MODEL;
     } else {
-      this.schemaForm.loadModel();
+      this.schemaForm.reloadModel();
     }
   }
 
@@ -52,4 +57,7 @@ export class AppComponent implements OnInit {
     this.formModel = model;
   }
 
+  get errors() {
+    return collectErrors(this.schemaForm.rootControl);
+  }
 }

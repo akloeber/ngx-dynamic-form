@@ -108,6 +108,10 @@ export function isReadonly(prop: SFProp): boolean {
   return prop.readonly === true;
 }
 
+export function isExpanded(prop: SFProp): boolean {
+  return prop.initialView !== 'collapsed';
+}
+
 export function getMaxOccurs(prop: SFPropArray | SFPropSimple): number {
   if (prop.maxOccurs === 'unbounded') {
     return Number.POSITIVE_INFINITY;

@@ -30,22 +30,6 @@ export class PropArrayComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.viewState) {
-      if (this.viewState.expanded === undefined) {
-        this.viewState.expanded = this.schema.initialView !== 'collapsed';
-      }
-
-      if (this.viewState.items === undefined) {
-        this.viewState.items = [];
-      }
-
-      for (let idx = 0; idx < this.items.length; idx++) {
-        if (this.viewState.items[idx] === undefined) {
-          this.viewState.items[idx] = {};
-        }
-      }
-    }
-
     if (changes.schema) {
       this.maxOccurs = getMaxOccurs(this.schema);
       this.minOccurs = getMinOccurs(this.schema);
@@ -68,7 +52,8 @@ export class PropArrayComponent implements OnChanges {
   }
 
   addItem() {
-    this.items.push(this.schemaFormBuilderService.createFormControl(this.schema.items, undefined));
-    this.viewState.items.push({});
+    const itemViewState = {};
+    this.viewState.items.push(itemViewState);
+    this.items.push(this.schemaFormBuilderService.createFormControl(this.schema.items, itemViewState, undefined));
   }
 }

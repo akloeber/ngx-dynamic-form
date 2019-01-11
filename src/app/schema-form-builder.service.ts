@@ -4,9 +4,9 @@ import {
   getMaxLength,
   getMaxOccurs,
   getMinLength,
-  getMinOccurs,
+  getMinOccurs, isExpanded,
   isReadonly,
-  isRequired,
+  isRequired, SFModel,
   SFProp,
   SFPropSimple
 } from './schema-types';
@@ -56,26 +56,55 @@ export class SchemaFormBuilderService {
     return validators;
   }
 
-  createFormControl(schema: SFProp, model?: any): AbstractControl {
+  createFormControl(schema: SFProp, viewState: any, model?: SFModel): AbstractControl {
     switch (schema.type) {
       case 'array':
+        const itemCount = model ? model.length : 0;
+
+        // initialize viewState
+        if (!viewState.hasOwnProperty('items')) {
+          viewState.items = [];
+        }
+        if (!viewState.hasOwnProperty('expanded')) {
+          viewState.expanded = isExpanded(schema);
+        }
+
         return new FormArray(
-          Array.apply(null, {length: model ? model.length : 0})
-            .map((_, idx) => this.createFormControl(schema.items, model[idx]))
+          Array.apply(null, {length: itemCount})
+            .map((_, idx) => {
+              if (!viewState.items.hasOwnProperty(idx)) {
+                viewState.items[idx] = {};
+              }
+              return this.createFormControl(schema.items, viewState.items[idx], model[idx]);
+            })
         );
       case 'object':
+        if (!viewState.hasOwnProperty('expanded')) {
+          viewState.expanded = isExpanded(schema);
+        }
+        if (!viewState.hasOwnProperty('properties')) {
+          viewState.properties = {};
+        }
+
         return new FormGroup(
           Object.entries(schema.properties)
             .reduce(
-              (acc, [propKey, propSchema]) =>
-                ({...acc, [propKey]: this.createFormControl(propSchema, model ? model[propKey] : undefined)}),
+              (acc, [propKey, propSchema]) => {
+                if (!viewState.properties.hasOwnProperty(propKey)) {
+                  viewState.properties[propKey] = {};
+                }
+                return ({
+                  ...acc,
+                  [propKey]: this.createFormControl(propSchema, viewState.properties[propKey], model ? model[propKey] : undefined)
+                });
+              },
               {}
             )
         );
       default:
         const propSimple = schema as SFPropSimple;
         const validators = SchemaFormBuilderService.getValidators(propSimple);
-        return new FormControl({value: propSimple.default, disabled: isReadonly(propSimple)}, validators);
+        return new FormControl({value: propSimple.default || null, disabled: isReadonly(propSimple)}, validators);
     }
   }
 }

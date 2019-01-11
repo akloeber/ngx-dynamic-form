@@ -4,7 +4,7 @@ import {SFModel, SFSchema} from '../schema-types';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {FormControlStatus} from '../form-utils';
+import {collectErrors, FormControlStatus} from '../form-utils';
 
 function connectEventEmitter<T>(o: Observable<T>, e: EventEmitter<T>): Subscription {
   return o.subscribe(
@@ -45,29 +45,12 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.schema) {
-      if (this.schema) {
-        // schema set or changed
-        this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, this.model) as FormGroup;
-        this.valueChangesSubscription = this.rootControl.valueChanges.subscribe(value => {
-
-          this.dirtySignal.next(this.rootControl.dirty);
-          this.modelChangeSignal.next(this.rootControl.getRawValue());
-        });
-        this.valueChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {
-          this.statusChangeSignal.next(status);
-        });
-      } else {
-        // no schema available
-        if (this.rootControl) {
-          this.unsubscribeValueObserver();
-          this.rootControl = null;
-        }
-      }
       this.viewState = {}; // reset view state
     }
 
-    if (changes.model) {
-      this.loadModel();
+    if (changes.model || changes.schema) {
+      // schema and model available
+      this.reloadModel();
     }
   }
 
@@ -86,9 +69,27 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
   /**
    * Can be used to force reloading of input model.
    */
-  loadModel() {
-    if (this.model && this.rootControl) {
-      // model available and schema available (i.e. rootControl populated)
+  reloadModel() {
+    if (this.rootControl) {
+      // clear old form
+      this.unsubscribeValueObserver();
+      this.rootControl = null;
+    }
+
+    if (this.model && this.schema) {
+      // model available and schema available
+      this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, this.viewState, this.model) as FormGroup;
+      console.log('HERE viewState', this.viewState);
+
+      this.valueChangesSubscription = this.rootControl.valueChanges.subscribe(value => {
+
+        this.dirtySignal.next(this.rootControl.dirty);
+        this.modelChangeSignal.next(this.rootControl.getRawValue());
+      });
+      this.valueChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {
+        this.statusChangeSignal.next(status);
+      });
+
       this.rootControl.setValue(this.model);
     }
   }

@@ -2,7 +2,7 @@
   <h3 [attr.title]="schema.explanation">
     <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
     {{schema.description}}
-    <button (click)="addItem()" [disabled]="items.length >= maxOccurs">Add</button>
+    <button *ngIf="!readonlyMode" (click)="addItem()" [disabled]="items.length >= maxOccurs">Add</button>
   </h3>
   <ul *ngIf="viewState.expanded" [formArrayName]="key">
     <li *ngFor="let item of items.controls; let idx=index">
@@ -13,8 +13,9 @@
         [readonlyMode]="readonlyMode"
         [viewState]="viewState.items[idx]"
       >
-        <button (click)="removeItem(idx)" [disabled]="items.length <= minOccurs">
-          Remove {{items.length}} {{minOccurs}}</button>
+        <button *ngIf="!readonlyMode" (click)="removeItem(idx)" [disabled]="items.length <= minOccurs">
+          Remove {{items.length}} {{minOccurs}}
+        </button>
       </app-prop-complex>
     </li>
   </ul>

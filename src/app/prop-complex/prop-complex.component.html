@@ -2,11 +2,13 @@
   <h3 [attr.title]="schema.explanation">
     <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
     {{description}}
-    <ng-template [ngForOf]="schema.controls" let-control ngFor>
-      <ng-container [ngSwitch]="control.type">
-        <app-address-picker *ngSwitchCase="'AddressPicker'" [formGroup]="formGroup" [config]="control.config"></app-address-picker>
-      </ng-container>
-    </ng-template>
+    <ng-container *ngIf="!readonlyMode">
+      <ng-template [ngForOf]="schema.controls" let-control ngFor>
+        <ng-container [ngSwitch]="control.type">
+          <app-address-picker *ngSwitchCase="'AddressPicker'" [formGroup]="formGroup" [config]="control.config"></app-address-picker>
+        </ng-container>
+      </ng-template>
+    </ng-container>
     <ng-content select="button"></ng-content>
   </h3>
   <ul *ngIf="viewState.expanded">
