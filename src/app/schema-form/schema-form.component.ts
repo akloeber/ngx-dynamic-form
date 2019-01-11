@@ -29,10 +29,12 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
 
   rootControl: FormGroup | null = null;
   viewState: any = {};
-  private valueChangesSubscription: Subscription;
   private dirtySignal = new BehaviorSubject<boolean>(false);
   private statusChangeSignal = new BehaviorSubject<FormControlStatus>(null);
   private modelChangeSignal = new BehaviorSubject<any>(null);
+
+  private valueChangesSubscription: Subscription;
+  private statusChangesSubscription: Subscription;
   private subscriptions: Subscription[] = [];
 
   constructor(private schemaFormBuilderService: SchemaFormBuilderService) {
@@ -54,15 +56,19 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private unsubscribeValueObserver(): void {
+  private unsubscribeControlObservers(): void {
     if (this.valueChangesSubscription) {
       this.valueChangesSubscription.unsubscribe();
       this.valueChangesSubscription = null;
     }
+    if (this.statusChangesSubscription) {
+      this.statusChangesSubscription.unsubscribe();
+      this.statusChangesSubscription = null;
+    }
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeValueObserver();
+    this.unsubscribeControlObservers();
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
@@ -72,21 +78,20 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
   reloadModel() {
     if (this.rootControl) {
       // clear old form
-      this.unsubscribeValueObserver();
+      this.unsubscribeControlObservers();
       this.rootControl = null;
     }
 
     if (this.model && this.schema) {
       // model available and schema available
       this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, this.viewState, this.model) as FormGroup;
-      console.log('HERE viewState', this.viewState);
 
       this.valueChangesSubscription = this.rootControl.valueChanges.subscribe(value => {
-
         this.dirtySignal.next(this.rootControl.dirty);
         this.modelChangeSignal.next(this.rootControl.getRawValue());
       });
-      this.valueChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {
+
+      this.statusChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {
         this.statusChangeSignal.next(status);
       });
 
