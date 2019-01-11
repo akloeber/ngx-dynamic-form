@@ -1,0 +1,8 @@
+<form *ngIf="rootControl" [formGroup]="rootControl">
+  <app-prop-complex
+    [schema]="schema"
+    [formGroup]="rootControl"
+    [viewState]="viewState"
+    [readonlyMode]="readonlyMode"
+  ></app-prop-complex>
+</form>

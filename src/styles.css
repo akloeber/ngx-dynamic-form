@@ -15,13 +15,12 @@ section {
   flex-direction: row;
 }
 
-pre {
+section > * {
   flex: 1;
 }
 
-form {
-  flex: none;
-  width: 300px;
+app-schema-form {
+  min-width: 300px;
 }
 
 h4 {

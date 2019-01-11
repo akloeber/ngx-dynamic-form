@@ -1,26 +1,22 @@
-<h3>{{title}}</h3>
-<input id="dirty" type="radio" disabled [value]="true" [ngModel]="rootControl.dirty"/>
+<h3>ngx-dynamic-form</h3>
+<input id="dirty" type="radio" disabled [value]="true" [ngModel]="schemaForm.dirtyChanged | async"/>
 <label for="dirty">dirty</label>
-<input id="invalid" type="radio" disabled [value]="true" [ngModel]="rootControl.invalid"/>
+<input id="invalid" type="radio" disabled [value]="'INVALID'" [ngModel]="schemaForm.statusChanged | async"/>
 <label for="invalid" [attr.title]="errorsSnapshot ? (errorsSnapshot | json) : undefined">invalid</label>
-<input id="touched" type="radio" disabled [value]="true" [ngModel]="rootControl.touched"/>
-<label for="touched">touched</label>
 <br>
 <input id="readonly" type="checkbox" [(ngModel)]="readonlyMode"/>
 <label for="readonly">Readonly mode</label>
 <br>
-<button (click)="resetModel()">Reset model</button>
-<button (click)="resetViewState()">Reset view state</button>
+<button (click)="reloadModel()">Reload model</button>
 
 <section>
-  <form [formGroup]="rootControl">
-    <app-prop-complex
-      [schema]="schema"
-      [formGroup]="rootControl"
-      [viewState]="viewState"
-      [readonlyMode]="readonlyMode"
-    ></app-prop-complex>
-  </form>
+  <app-schema-form
+    [schema]="schema"
+    [model]="model"
+    [readonlyMode]="readonlyMode"
+    (modelChanged)="onModelChanged($event)"
+  >
+  </app-schema-form>
   <pre>{{formModel | json}}</pre>
-  <pre>{{viewStateSnapshot | json}}</pre>
+  <pre>{{model | json}}</pre>
 </section>

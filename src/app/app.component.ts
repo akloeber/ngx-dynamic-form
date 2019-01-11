@@ -1,10 +1,9 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {AbstractControl, Form, FormGroup} from '@angular/forms';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {SchemaFormBuilderService} from './schema-form-builder.service';
 import {MODEL} from './model';
 import {SCHEMA} from './schema';
-import {SFSchema} from './schema-types';
-import {collectErrors} from './form-utils';
+import {SFModel, SFSchema} from './schema-types';
+import {SchemaFormComponent} from './schema-form/schema-form.component';
 
 @Component({
   selector: 'app-root',
@@ -13,44 +12,44 @@ import {collectErrors} from './form-utils';
     SchemaFormBuilderService,
   ]
 })
-export class AppComponent implements OnInit, AfterViewChecked {
+export class AppComponent implements OnInit {
 
-  title = 'ngx-dynamic-form';
+  @ViewChild(SchemaFormComponent) schemaForm: SchemaFormComponent;
+
   readonlyMode = false;
-  rootControl: FormGroup;
   schema: SFSchema;
-  viewState: any;
-  viewStateSnapshot: any;
+  model: SFModel;
+  formModel: SFModel;
   errorsSnapshot: any;
 
   constructor(
-    private cd: ChangeDetectorRef,
-    private schemaFormBuilderService: SchemaFormBuilderService,
-  ) {
-  }
-
-  get formModel() {
-    return this.rootControl.getRawValue();
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.viewState = {};
     this.schema = SCHEMA;
-    this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, MODEL) as FormGroup;
-    this.rootControl.setValue(MODEL);
+    this.model = MODEL;
+
+    this.schemaForm.dirtyChanged.subscribe(dirty => {
+      console.log('dirtyChanged', dirty);
+    });
+    this.schemaForm.statusChanged.subscribe(dirty => {
+      console.log('statusChanged', dirty);
+    });
+    this.schemaForm.modelChanged.subscribe(model => {
+      console.log('modelChanged', JSON.stringify(model, null, 2));
+    });
   }
 
-  resetModel() {
-    this.rootControl.patchValue(MODEL);
+  reloadModel() {
+    if (this.model !== MODEL) {
+      this.model = MODEL;
+    } else {
+      this.schemaForm.loadModel();
+    }
   }
 
-  resetViewState() {
-    this.viewState = {};
+  onModelChanged(model: SFModel): void {
+    this.formModel = model;
   }
 
-  ngAfterViewChecked(): void {
-    this.viewStateSnapshot = JSON.parse(JSON.stringify(this.viewState));
-    this.errorsSnapshot = JSON.parse(JSON.stringify(collectErrors(this.rootControl)));
-    this.cd.detectChanges();
-  }
 }

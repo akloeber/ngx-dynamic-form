@@ -81,6 +81,7 @@ export interface SfPropChoiceStringMasterData extends SFPropBase {
 }
 
 export type SFSchema = SFProp;
+export type SFModel = any | null;
 
 export type SFInputType = 'text' | 'number' | 'date' | 'radio' | 'select' | 'multi-select' | 'hidden';
 

@@ -1,5 +1,15 @@
 import {Injectable} from '@angular/core';
-import {getInputType, getMaxLength, getMaxOccurs, getMinLength, getMinOccurs, isRequired, SFProp, SFPropSimple} from './schema-types';
+import {
+  getInputType,
+  getMaxLength,
+  getMaxOccurs,
+  getMinLength,
+  getMinOccurs,
+  isReadonly,
+  isRequired,
+  SFProp,
+  SFPropSimple
+} from './schema-types';
 import {AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {CustomValidators} from 'src/app/custom-validators';
 
@@ -11,30 +21,7 @@ export class SchemaFormBuilderService {
   constructor() {
   }
 
-  createFormControl(schema: SFProp, model?: any): AbstractControl {
-    switch (schema.type) {
-      case 'array':
-        return new FormArray(
-          Array.apply(null, {length: model ? model.length : 0})
-            .map((_, idx) => this.createFormControl(schema.items, model[idx]))
-        );
-      case 'object':
-        return new FormGroup(
-          Object.entries(schema.properties)
-            .reduce(
-              (acc, [propKey, propSchema]) =>
-                ({...acc, [propKey]: this.createFormControl(propSchema, model ? model[propKey] : undefined)}),
-              {}
-            )
-        );
-      default:
-        const propSimple = schema as SFPropSimple;
-        const validators = this.getValidators(propSimple);
-        return new FormControl(propSimple.default, validators);
-    }
-  }
-
-  private getValidators(schema: SFPropSimple): ValidatorFn[] {
+  private static getValidators(schema: SFPropSimple): ValidatorFn[] {
     const validators: ValidatorFn[] = [];
     if (isRequired(schema)) {
       validators.push(Validators.required);
@@ -67,5 +54,28 @@ export class SchemaFormBuilderService {
     }
 
     return validators;
+  }
+
+  createFormControl(schema: SFProp, model?: any): AbstractControl {
+    switch (schema.type) {
+      case 'array':
+        return new FormArray(
+          Array.apply(null, {length: model ? model.length : 0})
+            .map((_, idx) => this.createFormControl(schema.items, model[idx]))
+        );
+      case 'object':
+        return new FormGroup(
+          Object.entries(schema.properties)
+            .reduce(
+              (acc, [propKey, propSchema]) =>
+                ({...acc, [propKey]: this.createFormControl(propSchema, model ? model[propKey] : undefined)}),
+              {}
+            )
+        );
+      default:
+        const propSimple = schema as SFPropSimple;
+        const validators = SchemaFormBuilderService.getValidators(propSimple);
+        return new FormControl({value: propSimple.default, disabled: isReadonly(propSimple)}, validators);
+    }
   }
 }
