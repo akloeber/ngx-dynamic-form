@@ -3,20 +3,23 @@
     <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
     {{schema.description}}
     <button *ngIf="!readonlyMode" (click)="addItem()" [disabled]="items.length >= maxOccurs">Add</button>
+    <button *ngIf="!readonlyMode && minOccurs === 0" (click)="clearItems()" [disabled]="items.length == 0">Clear</button>
   </h3>
   <ul *ngIf="viewState.expanded" [formArrayName]="key">
-    <li *ngFor="let item of items.controls; let idx=index">
-      <app-prop-complex
-        [formGroup]="item"
-        [index]="idx"
-        [schema]="schema.items"
-        [readonlyMode]="readonlyMode"
-        [viewState]="viewState.items[idx]"
-      >
-        <button *ngIf="!readonlyMode" (click)="removeItem(idx)" [disabled]="items.length <= minOccurs">
-          Remove {{items.length}} {{minOccurs}}
-        </button>
-      </app-prop-complex>
-    </li>
+    <ng-container *ngFor="let item of items.controls; let idx=index">
+      <li *ngIf="showItem(item)">
+        <app-prop-complex
+          [formGroup]="item"
+          [index]="idx"
+          [schema]="schema.items"
+          [readonlyMode]="readonlyMode"
+          [viewState]="viewState.items[idx]"
+        >
+          <button *ngIf="!readonlyMode" (click)="removeItem(idx)" [disabled]="items.length <= minOccurs">
+            Remove {{items.length}} {{minOccurs}}
+          </button>
+        </app-prop-complex>
+      </li>
+    </ng-container>
   </ul>
 </ng-container>

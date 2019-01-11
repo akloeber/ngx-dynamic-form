@@ -27,6 +27,15 @@ export function collectErrors(control: AbstractControl): any | null {
   }
 }
 
+export function getRawValue(control: AbstractControl): any {
+  // use raw value where possible as value vanishes once control gets disabled
+  if (isFormGroup(control)) {
+    return control.getRawValue();
+  } else {
+    return control.value;
+  }
+}
+
 function isFormGroup(control: AbstractControl): control is FormGroup {
   return !!(<FormGroup>control).controls;
 }

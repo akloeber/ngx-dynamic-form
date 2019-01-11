@@ -4,7 +4,8 @@ import {MODEL} from './model';
 import {SCHEMA} from './schema';
 import {SFModel, SFSchema} from './schema-types';
 import {SchemaFormComponent} from './schema-form/schema-form.component';
-import {collectErrors} from './form-utils';
+import {collectErrors, FormControlStatus} from './form-utils';
+import {AbstractControl} from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -15,13 +16,16 @@ import {collectErrors} from './form-utils';
 })
 export class AppComponent implements OnInit {
 
-  @ViewChild(SchemaFormComponent) schemaForm: SchemaFormComponent;
+  @ViewChild('editor') schemaFormEditor: SchemaFormComponent;
+  @ViewChild('view') schemaFormView: SchemaFormComponent;
 
   readonlyMode = false;
+  hideEmpty = true;
   schema: SFSchema;
   initialModel: SFModel;
   formModel: SFModel;
   readonlyModel: SFModel;
+  status: FormControlStatus;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -32,14 +36,14 @@ export class AppComponent implements OnInit {
     this.initialModel = MODEL;
     this.readonlyModel = MODEL;
 
-    this.schemaForm.dirtyChanged.subscribe(dirty => {
+    this.schemaFormEditor.dirtyChanged.subscribe(dirty => {
       console.log('dirtyChanged', dirty);
     });
-    this.schemaForm.statusChanged.subscribe(dirty => {
+    this.schemaFormEditor.statusChanged.subscribe(dirty => {
       console.log('statusChanged', dirty);
     });
-    this.schemaForm.modelChanged.subscribe(model => {
-      console.log('modelChanged here', model);
+    this.schemaFormEditor.modelChanged.subscribe(model => {
+      console.log('modelChanged', model);
       this.readonlyModel = model;
       this.cd.markForCheck();
     });
@@ -49,7 +53,7 @@ export class AppComponent implements OnInit {
     if (this.initialModel !== MODEL) {
       this.initialModel = MODEL;
     } else {
-      this.schemaForm.reloadModel();
+      this.schemaFormEditor.reloadModel();
     }
   }
 
@@ -57,7 +61,15 @@ export class AppComponent implements OnInit {
     this.formModel = model;
   }
 
+  onStatusChanged(status: FormControlStatus) {
+    this.status = status;
+  }
+
   get errors() {
-    return collectErrors(this.schemaForm.rootControl);
+    return collectErrors(this.schemaFormEditor.rootControl);
+  }
+
+  test() {
+
   }
 }

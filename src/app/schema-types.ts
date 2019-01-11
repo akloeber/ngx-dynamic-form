@@ -130,3 +130,23 @@ export function getMinLength(prop: SFPropSimple): number {
 export function getMaxLength(prop: SFPropSimple): number {
   return prop.maxLength !== undefined ? prop.maxLength : Number.POSITIVE_INFINITY;
 }
+
+export function isEmpty(value: any): boolean {
+  // console.log('isEmpty', value);
+
+  if (value == null || value === '') {
+    return true;
+  }
+
+  if (Array.isArray(value) || typeof value === 'object') {
+    for (const prop of Object.values(value)) {
+      if (!isEmpty(prop)) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+

@@ -1,10 +1,21 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {SFModel, SFSchema} from '../schema-types';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {collectErrors, FormControlStatus} from '../form-utils';
+import {collectErrors, FormControlStatus, getRawValue} from '../form-utils';
 
 function connectEventEmitter<T>(o: Observable<T>, e: EventEmitter<T>): Subscription {
   return o.subscribe(
@@ -22,6 +33,7 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
   @Input() schema: SFSchema;
   @Input() model: SFModel = null;
   @Input() readonlyMode = false;
+  @Input() hideEmpty = false;
 
   @Output() dirtyChanged = new EventEmitter<boolean>(true);
   @Output() statusChanged = new EventEmitter<FormControlStatus>(true);
@@ -37,7 +49,10 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
   private statusChangesSubscription: Subscription;
   private subscriptions: Subscription[] = [];
 
-  constructor(private schemaFormBuilderService: SchemaFormBuilderService) {
+  constructor(
+    private cd: ChangeDetectorRef,
+    private schemaFormBuilderService: SchemaFormBuilderService,
+  ) {
     this.subscriptions.push(
       connectEventEmitter(this.dirtySignal.pipe(distinctUntilChanged()), this.dirtyChanged),
       connectEventEmitter(this.statusChangeSignal.pipe(distinctUntilChanged()), this.statusChanged),
@@ -88,7 +103,8 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
 
       this.valueChangesSubscription = this.rootControl.valueChanges.subscribe(value => {
         this.dirtySignal.next(this.rootControl.dirty);
-        this.modelChangeSignal.next(this.rootControl.getRawValue());
+        this.modelChangeSignal.next(getRawValue(this.rootControl));
+        this.cd.markForCheck();
       });
 
       this.statusChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {

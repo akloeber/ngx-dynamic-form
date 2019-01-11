@@ -12,8 +12,8 @@
     <ng-content select="button"></ng-content>
   </h3>
   <ul *ngIf="viewState.expanded">
-    <ng-template [ngForOf]="properties" let-prop ngFor>
-      <li *ngIf="widgetForProperty(prop.schema) as widget" [ngSwitch]="widget">
+    <ng-template [ngForOf]="properties" [ngForTrackBy]="trackByKey" let-prop ngFor>
+      <li *ngIf="widgetForProperty(prop) as widget" [ngSwitch]="widget">
         <app-prop-simple
           *ngSwitchCase="'SIMPLE'"
           [formGroup]="formGroup"
@@ -27,6 +27,7 @@
           [formGroup]="formGroup"
           [key]="prop.key"
           [readonlyMode]="readonlyMode"
+          [hideEmpty]="hideEmpty"
           [schema]="prop.schema"
           [viewState]="viewState.properties[prop.key]"
         ></app-prop-array>
@@ -34,6 +35,7 @@
           *ngSwitchCase="'COMPLEX'"
           [formGroup]="formGroup.get(prop.key)"
           [readonlyMode]="readonlyMode"
+          [hideEmpty]="hideEmpty"
           [schema]="prop.schema"
           [viewState]="viewState.properties[prop.key]"
         ></app-prop-complex>

@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {isExpanded, isReadonly, SFProp, SFPropComplex} from '../schema-types';
+import {isEmpty, SFProp, SFPropComplex} from '../schema-types';
 import {FormGroup} from '@angular/forms';
+import {getRawValue} from '../form-utils';
 
 enum PropWidget {
   SIMPLE = 'SIMPLE',
@@ -16,9 +17,18 @@ interface PropDescriptor {
 @Component({
   selector: 'app-prop-complex',
   templateUrl: './prop-complex.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class PropComplexComponent implements OnChanges {
+
+  get description(): string {
+    let result = this.schema.description;
+    if (this.index !== undefined) {
+      result += ` #${this.index + 1}`;
+    }
+
+    return result;
+  }
 
   @Input() formGroup: FormGroup;
   @Input() schema: SFPropComplex;
@@ -30,17 +40,9 @@ export class PropComplexComponent implements OnChanges {
   };
   @Input() index?: number;
   @Input() readonlyMode?: boolean;
+  @Input() hideEmpty?: boolean;
 
   properties: Array<PropDescriptor> = [];
-
-  get description(): string {
-    let result = this.schema.description;
-    if (this.index !== undefined) {
-      result += ` #${this.index + 1}`;
-    }
-
-    return result;
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.schema) {
@@ -50,12 +52,12 @@ export class PropComplexComponent implements OnChanges {
     }
   }
 
-  widgetForProperty(schema: SFProp): PropWidget | null {
-    if (schema.widget === 'hidden') {
+  widgetForProperty(prop: PropDescriptor): PropWidget | null {
+    if (this.isWidgetHidden(prop)) {
       return null;
     }
 
-    switch (schema.type) {
+    switch (prop.schema.type) {
       case 'array':
         return PropWidget.ARRAY;
       case 'object':
@@ -63,5 +65,21 @@ export class PropComplexComponent implements OnChanges {
       default:
         return PropWidget.SIMPLE;
     }
+  }
+
+  isWidgetHidden(prop: PropDescriptor): boolean {
+    if (prop.schema.widget === 'hidden') {
+      return true;
+    }
+
+    if (this.hideEmpty && isEmpty(getRawValue(this.formGroup.get(prop.key)))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  trackByKey(index: number, item: PropDescriptor): string {
+    return item.key;
   }
 }
