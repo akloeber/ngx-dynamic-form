@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
   status: FormControlStatus;
 
   constructor(
-    private cd: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +44,6 @@ export class AppComponent implements OnInit {
     this.schemaFormEditor.modelChanged.subscribe(model => {
       console.log('modelChanged', model);
       this.readonlyModel = model;
-      this.cd.markForCheck();
     });
   }
 
@@ -65,11 +63,7 @@ export class AppComponent implements OnInit {
     this.status = status;
   }
 
-  get errors() {
-    return collectErrors(this.schemaFormEditor.rootControl);
-  }
-
-  test() {
-
+  onShowErrors() {
+    alert(JSON.stringify(collectErrors(this.schemaFormEditor.rootControl), null, 2));
   }
 }

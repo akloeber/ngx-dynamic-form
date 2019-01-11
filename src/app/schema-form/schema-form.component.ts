@@ -50,7 +50,6 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private cd: ChangeDetectorRef,
     private schemaFormBuilderService: SchemaFormBuilderService,
   ) {
     this.subscriptions.push(
@@ -104,7 +103,6 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
       this.valueChangesSubscription = this.rootControl.valueChanges.subscribe(value => {
         this.dirtySignal.next(this.rootControl.dirty);
         this.modelChangeSignal.next(getRawValue(this.rootControl));
-        this.cd.markForCheck();
       });
 
       this.statusChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {

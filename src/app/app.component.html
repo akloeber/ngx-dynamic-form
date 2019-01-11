@@ -1,5 +1,5 @@
 <h3>ngx-dynamic-form</h3>
-<h4>Status: {{status}}</h4>
+<h4>Status: {{status}}</h4><button *ngIf="status === 'INVALID'" (click)="onShowErrors()">Errors</button>
 <input id="dirty" type="radio" disabled [value]="true" [ngModel]="schemaFormEditor.dirtyChanged | async"/>
 <label for="dirty">dirty</label>
 <input id="invalid" type="radio" disabled [value]="'INVALID'" [ngModel]="schemaFormEditor.statusChanged | async"/>
@@ -12,7 +12,7 @@
 <label for="hideEmpty">Hide empty sections</label>
 <br>
 <button (click)="reloadModel()">Reload model</button>
-<button (click)="test()">Test</button>
+
 
 <section>
   <app-schema-form
@@ -39,9 +39,5 @@
   <div>
     <h4>Form model</h4>
     <pre>{{formModel | json}}</pre>
-  </div>
-  <div>
-    <h4>Errors</h4>
-    <pre>{{errors | json}}</pre>
   </div>
 </section>

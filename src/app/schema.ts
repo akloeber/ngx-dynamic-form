@@ -85,7 +85,7 @@ export const SCHEMA: SFPropComplex = {
       description: 'Employers',
       explanation: 'Activate checkbox to expand list of employers',
       initialView: 'collapsed',
-      minOccurs: 0,
+      minOccurs: 3,
       maxOccurs: 4,
       items: {
         type: 'object',
