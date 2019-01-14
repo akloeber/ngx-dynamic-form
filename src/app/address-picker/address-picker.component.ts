@@ -34,19 +34,22 @@ export class AddressPickerComponent {
     Object.entries(this.config.mapping)
       .forEach(([field, target]) => {
         const control = this.formGroup.get(target);
-        control.setValue(address[field]);
-        control.disable();
+        control.setValue(address[field], {emitEvent: false});
+        control.disable({emitEvent: false});
       });
+    this.formGroup.markAsDirty();
+    this.formGroup.updateValueAndValidity();
   }
 
   private unlink() {
-    this.formGroup.get(this.config.mapping.id).reset(null);
+    this.formGroup.get(this.config.mapping.id).setValue(null, {emitEvent: false});
 
     Object.entries(this.config.mapping)
       .forEach(([field, target]) => {
         const control = this.formGroup.get(target);
-        control.enable();
+        control.enable({emitEvent: false});
       });
-
+    this.formGroup.markAsDirty();
+    this.formGroup.updateValueAndValidity();
   }
 }

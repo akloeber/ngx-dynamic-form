@@ -1,11 +1,10 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {SchemaFormBuilderService} from './schema-form-builder.service';
 import {MODEL} from './model';
 import {SCHEMA} from './schema';
 import {SFModel, SFSchema} from './schema-types';
 import {SchemaFormComponent} from './schema-form/schema-form.component';
 import {collectErrors, FormControlStatus} from './form-utils';
-import {AbstractControl} from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -27,8 +26,8 @@ export class AppComponent implements OnInit {
   readonlyModel: SFModel;
   status: FormControlStatus;
 
-  constructor(
-  ) {}
+  constructor() {
+  }
 
   ngOnInit(): void {
     this.schema = SCHEMA;
@@ -36,13 +35,13 @@ export class AppComponent implements OnInit {
     this.readonlyModel = MODEL;
 
     this.schemaFormEditor.dirtyChanged.subscribe(dirty => {
-      console.log('dirtyChanged', dirty);
+      console.log('dirtyChanged event', dirty);
     });
-    this.schemaFormEditor.statusChanged.subscribe(dirty => {
-      console.log('statusChanged', dirty);
+    this.schemaFormEditor.statusChanged.subscribe(status => {
+      console.log('statusChanged event', status);
     });
     this.schemaFormEditor.modelChanged.subscribe(model => {
-      console.log('modelChanged', model);
+      console.log('modelChanged event', model);
       this.readonlyModel = model;
     });
   }
@@ -65,5 +64,9 @@ export class AppComponent implements OnInit {
 
   onShowErrors() {
     alert(JSON.stringify(collectErrors(this.schemaFormEditor.rootControl), null, 2));
+  }
+
+  test() {
+    console.log('HERE', this.schemaFormEditor.rootControl.dirty);
   }
 }

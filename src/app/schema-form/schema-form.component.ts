@@ -1,21 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {SFModel, SFSchema} from '../schema-types';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {collectErrors, FormControlStatus, getRawValue} from '../form-utils';
+import {FormControlStatus, getRawValue} from '../form-utils';
 
 function connectEventEmitter<T>(o: Observable<T>, e: EventEmitter<T>): Subscription {
   return o.subscribe(
@@ -70,17 +59,6 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private unsubscribeControlObservers(): void {
-    if (this.valueChangesSubscription) {
-      this.valueChangesSubscription.unsubscribe();
-      this.valueChangesSubscription = null;
-    }
-    if (this.statusChangesSubscription) {
-      this.statusChangesSubscription.unsubscribe();
-      this.statusChangesSubscription = null;
-    }
-  }
-
   ngOnDestroy(): void {
     this.unsubscribeControlObservers();
     this.subscriptions.forEach(s => s.unsubscribe());
@@ -110,6 +88,17 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
       });
 
       this.rootControl.setValue(this.model);
+    }
+  }
+
+  private unsubscribeControlObservers(): void {
+    if (this.valueChangesSubscription) {
+      this.valueChangesSubscription.unsubscribe();
+      this.valueChangesSubscription = null;
+    }
+    if (this.statusChangesSubscription) {
+      this.statusChangesSubscription.unsubscribe();
+      this.statusChangesSubscription = null;
     }
   }
 }
