@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {getInputType, getMaxLength, isReadonly, isRequired, SFInputType, SFPropSimple} from '../schema-types';
-import {FormControl, FormGroup, AbstractControl} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {FormControlStatus} from '../form-utils';
 import {Subscription} from 'rxjs';
 
@@ -34,8 +34,10 @@ export class PropSimpleComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.statusChangeSubscription) {
+      // initialize view state for readonly and register observer to keep in-sync
+      this.updateReadonlyViewState(this.formControl.status as FormControlStatus);
       this.statusChangeSubscription = this.formControl.statusChanges.subscribe(
-        status => this.onDisabledChange(status === FormControlStatus.DISABLED)
+        status => this.updateReadonlyViewState(status)
       );
     }
 
@@ -82,12 +84,12 @@ export class PropSimpleComponent implements OnChanges, OnDestroy {
     return isReadonly(this.schema) || this.readonlyMode || this.viewState.readonly;
   }
 
-  private onDisabledChange(isDisabled: boolean) {
-    if (isDisabled && !this.readonlyMode) {
+  private updateReadonlyViewState(status: FormControlStatus) {
+    if (status === FormControlStatus.DISABLED && !this.readonlyMode) {
       // only persist readonly state if not induced by readonly mode but dedicated disable operations
       this.viewState.readonly = true;
     }
-    if (!isDisabled) {
+    if (status !== FormControlStatus.DISABLED) {
       delete this.viewState.readonly;
     }
   }

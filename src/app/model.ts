@@ -6,7 +6,7 @@ export const MODEL = {
   birthday: '1990-12-21',
   nationalities: ['DE', 'FR'],
   address: {
-    id: null,
+    id: 123,
     city: 'Bonn',
     street: 'Adenauerallee'
   },

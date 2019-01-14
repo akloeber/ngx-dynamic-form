@@ -31,7 +31,7 @@ export const SCHEMA: SFPropComplex = {
       description: 'Title',
       minOccurs: 0,
       explanation: 'Value must not container characters other than letters, blank or dot',
-      pattern : '[a-zA-Z .]*',
+      pattern: '[a-zA-Z .]*',
     },
     name: {
       type: 'string',
@@ -85,7 +85,7 @@ export const SCHEMA: SFPropComplex = {
       description: 'Employers',
       explanation: 'Activate checkbox to expand list of employers',
       initialView: 'collapsed',
-      minOccurs: 3,
+      minOccurs: 2,
       maxOccurs: 4,
       items: {
         type: 'object',

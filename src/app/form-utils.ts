@@ -9,6 +9,11 @@ export enum FormControlStatus {
   DISABLED = 'DISABLED',
 }
 
+export enum FormControlState {
+  ENABLED = 'ENABLED',
+  DISABLED = 'DISABLED',
+}
+
 export function collectErrors(control: AbstractControl): any | null {
   if (isFormGroup(control)) {
     return Object.entries(control.controls)
