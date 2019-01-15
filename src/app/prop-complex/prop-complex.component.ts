@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {isEmpty, SFProp, SFPropComplex} from '../schema-types';
+import {SFProp, SFPropComplex} from '../schema-types';
 import {FormGroup} from '@angular/forms';
-import {getRawValue} from '../form-utils';
+import {collectModel} from '../form-utils';
 
 enum PropWidget {
   SIMPLE = 'SIMPLE',
@@ -21,15 +21,6 @@ interface PropDescriptor {
 })
 export class PropComplexComponent implements OnChanges {
 
-  get description(): string {
-    let result = this.schema.description;
-    if (this.index !== undefined) {
-      result += ` #${this.index + 1}`;
-    }
-
-    return result;
-  }
-
   @Input() formGroup: FormGroup;
   @Input() schema: SFPropComplex;
   @Input() viewState: {
@@ -41,8 +32,16 @@ export class PropComplexComponent implements OnChanges {
   @Input() index?: number;
   @Input() readonlyMode?: boolean;
   @Input() hideEmpty?: boolean;
-
   properties: Array<PropDescriptor> = [];
+
+  get description(): string {
+    let result = this.schema.description;
+    if (this.index !== undefined) {
+      result += ` #${this.index + 1}`;
+    }
+
+    return result;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.schema) {
@@ -72,7 +71,7 @@ export class PropComplexComponent implements OnChanges {
       return true;
     }
 
-    if (this.hideEmpty && isEmpty(getRawValue(this.formGroup.get(prop.key)))) {
+    if (this.hideEmpty && collectModel(this.formGroup.get(prop.key), prop.schema) === null) {
       return true;
     }
 

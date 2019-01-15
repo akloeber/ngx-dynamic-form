@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {getMaxOccurs, getMinOccurs, isEmpty, SFPropArray} from '../schema-types';
+import {getMaxOccurs, getMinOccurs, SFPropArray} from '../schema-types';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
-import {getRawValue} from '../form-utils';
+import {collectModel} from '../form-utils';
 
 @Component({
   selector: 'app-prop-array',
@@ -59,8 +59,8 @@ export class PropArrayComponent implements OnChanges {
     this.items.push(this.schemaFormBuilderService.createFormControl(this.schema.items, itemViewState, undefined));
   }
 
-  showItem(item: FormGroup): boolean {
-    return !this.hideEmpty || !isEmpty(getRawValue(item));
+  showItem(item: AbstractControl): boolean {
+    return !(this.hideEmpty && collectModel(item, this.schema.items) === null);
   }
 
   clearItems(): void {

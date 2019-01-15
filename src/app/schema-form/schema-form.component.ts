@@ -4,7 +4,7 @@ import {SFModel, SFSchema} from '../schema-types';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {FormControlStatus, getRawValue} from '../form-utils';
+import {collectModel, FormControlStatus} from '../form-utils';
 
 function connectEventEmitter<T>(o: Observable<T>, e: EventEmitter<T>): Subscription {
   return o.subscribe(
@@ -80,14 +80,14 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
 
       this.valueChangesSubscription = this.rootControl.valueChanges.subscribe(value => {
         this.dirtySignal.next(this.rootControl.dirty);
-        this.modelChangeSignal.next(getRawValue(this.rootControl));
+        this.modelChangeSignal.next(collectModel(this.rootControl, this.schema));
       });
 
       this.statusChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {
         this.statusChangeSignal.next(status);
       });
 
-      this.rootControl.setValue(this.model);
+      this.rootControl.patchValue(this.model);
     }
   }
 
