@@ -26,6 +26,13 @@ export const SCHEMA: SFPropComplex = {
         {text: 'Div.', value: 'D'}
       ],
     },
+    salutation: {
+      type: 'string',
+      description: 'Salutation',
+      if: {
+        sex: ['M', 'F'],
+      },
+    },
     title: {
       type: 'string',
       description: 'Title',

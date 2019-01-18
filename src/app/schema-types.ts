@@ -11,6 +11,10 @@ export type SFProp =
   SfPropChoiceString |
   SfPropChoiceStringMasterData;
 
+export interface SFConditionIf {
+  [propPath: string]: Array<string | number | boolean>;
+}
+
 interface ChoiceOption<T> {
   text: string;
   value: T;
@@ -32,6 +36,7 @@ interface SFPropBase {
   initialView?: 'collapsed' | 'expanded';
   readonly?: boolean;
   transient?: boolean;
+  if?: SFConditionIf;
 }
 
 type DT_SF_PROP_SIMPLE_TYPE = 'string' | 'number';

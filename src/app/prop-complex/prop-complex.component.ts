@@ -71,7 +71,12 @@ export class PropComplexComponent implements OnChanges {
       return true;
     }
 
-    if (this.hideEmpty && collectModel(this.formGroup.get(prop.key), prop.schema) === null) {
+    const control = this.formGroup.get(prop.key);
+    if (!control) {
+      return true;
+    }
+
+    if (this.hideEmpty && collectModel(control, prop.schema) === null) {
       return true;
     }
 

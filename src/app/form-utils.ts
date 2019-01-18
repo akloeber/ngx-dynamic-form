@@ -46,9 +46,9 @@ export function collectModel(control: AbstractControl, schema: SFSchema): SFMode
           return propValue !== null ? [...(acc || []), propValue] : acc;
         }, null as Array<any>);
     case 'object':
-      return Object.entries(schema.properties)
-        .reduce((acc, [propKey, propSchema]) => {
-          const propValue = collectModel(control.get(propKey), propSchema);
+      return Object.entries((control as FormGroup).controls)
+        .reduce((acc, [propKey, propControl]) => {
+          const propValue = collectModel(propControl, schema.properties[propKey]);
           return propValue !== null ? {[propKey]: propValue, ...acc} : acc;
         }, null);
     default:
