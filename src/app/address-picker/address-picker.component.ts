@@ -39,13 +39,16 @@ export class AddressPickerComponent implements OnInit {
     Object.entries(this.config.mapping)
       .forEach(([field, target]) => {
         const control = this.formGroup.get(target);
+        // NOTE:
+        // - emitEvent = true is necessary so that obj.readonly can be kept in-sync
+        // - onlySelf = true is necessary to prevent valueChange events for every single field
         if (state === FormControlState.DISABLED) {
           if (control.enabled) {
-            control.disable({emitEvent: false, onlySelf: true});
+            control.disable({emitEvent: true, onlySelf: true});
           }
         } else {
           if (control.disabled) {
-            control.enable({emitEvent: false, onlySelf: true});
+            control.enable({emitEvent: true, onlySelf: true});
           }
         }
       });

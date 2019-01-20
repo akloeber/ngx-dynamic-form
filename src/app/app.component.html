@@ -1,6 +1,5 @@
 <h3>ngx-dynamic-form</h3>
-<h4>Status: {{status}}</h4>
-<button *ngIf="status === 'INVALID'" (click)="onShowErrors()">Errors</button>
+<h4>Status: {{status}} <button *ngIf="status === 'INVALID'" (click)="onShowErrors()">Errors</button></h4>
 <input id="dirty" type="radio" disabled [value]="true" [ngModel]="schemaFormEditor.dirtyChanged | async"/>
 <label for="dirty">dirty</label>
 <input id="invalid" type="radio" disabled [value]="'INVALID'" [ngModel]="schemaFormEditor.statusChanged | async"/>
@@ -34,13 +33,7 @@
     [hideEmpty]="hideEmpty"
   >
   </app-schema-form-->
-  <div>
-    <h4>Initial model</h4>
-    <pre>{{initialModel | json}}</pre>
-  </div>
-  <div>
-    <h4>Form model</h4>
-    <pre>{{formModel | json}}</pre>
-  </div>
-  <app-view-state-monitor [viewState]="schemaFormEditor.viewState"></app-view-state-monitor>
+  <app-object-monitor header="Initial model" [obj]="initialModel"></app-object-monitor>
+  <app-object-monitor header="Form model" [obj]="formModel"></app-object-monitor>
+  <app-object-monitor header="View state" [obj]="schemaFormEditor.viewState"></app-object-monitor>
 </section>

@@ -24,8 +24,7 @@
         ></app-prop-simple>
         <app-prop-array
           *ngSwitchCase="'ARRAY'"
-          [formGroup]="formGroup"
-          [key]="prop.key"
+          [formArray]="formGroup.get(prop.key)"
           [readonlyMode]="readonlyMode"
           [hideEmpty]="hideEmpty"
           [schema]="prop.schema"

@@ -4,16 +4,18 @@ import {
   getMaxLength,
   getMaxOccurs,
   getMinLength,
-  getMinOccurs, isExpanded,
+  getMinOccurs,
   isReadonly,
-  isRequired, SFConditionIf, SFModel,
+  isRequired,
+  SFConditionIf,
+  SFModel,
   SFProp,
-  SFPropSimple, SFSchema
+  SFPropSimple,
+  SFSchema
 } from './schema-types';
 import {AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {CustomValidators} from 'src/app/custom-validators';
 import {get} from 'lodash-es';
-import {root} from 'rxjs/internal-compatibility';
 
 class SFCreationContext {
   conditionalProps: Array<{
@@ -44,16 +46,6 @@ export class SchemaFormBuilderService {
     return SchemaFormBuilderService.checkIf(condition, (propPath) => {
       const control = rootControl.get(propPath);
       return control ? control.value : null;
-    });
-  }
-
-  static checkIfOnModel(condition: SFConditionIf, model?: SFModel): boolean {
-    if (!model) {
-      return false;
-    }
-
-    return SchemaFormBuilderService.checkIf(condition, (propPath) => {
-      return get(model, propPath);
     });
   }
 
@@ -103,21 +95,19 @@ export class SchemaFormBuilderService {
     return validators;
   }
 
-  createFormControl(schema: SFProp, viewState: any, model?: SFModel): AbstractControl {
+  createFormControl(schema: SFProp, model?: SFModel): AbstractControl {
     const context = new SFCreationContext();
 
-    const rootControl = this.createFormControlInternal(context, schema, viewState, model);
+    const rootControl = this.createFormControlInternal(context, schema, model);
 
-    console.log(context.conditionalProps);
     context.conditionalProps.forEach(prop => {
-      console.log('HERE', SchemaFormBuilderService.checkIfOnControl(prop.propSchema.if, rootControl));
+      const condition = prop.propSchema.if;
 
-      Object.keys(prop.propSchema.if).forEach((propPath) => {
+      Object.keys(condition).forEach((propPath) => {
+
         rootControl.get(propPath).valueChanges.subscribe(() => {
-          if (SchemaFormBuilderService.checkIfOnControl(prop.propSchema.if, rootControl)) {
-            console.log('HERE OK');
+          if (SchemaFormBuilderService.checkIfOnControl(condition, rootControl)) {
             if (!prop.parent.contains(prop.propKey)) {
-              // TODO: what about viewState
               // TODO: unregister observer
               prop.parent.addControl(prop.propKey, this.createFormControlInternal(new SFCreationContext(), prop.propSchema, {}));
             }
@@ -133,48 +123,24 @@ export class SchemaFormBuilderService {
     return rootControl;
   }
 
-  private createFormControlInternal(context: SFCreationContext, schema: SFProp, viewState: any, model?: SFModel): AbstractControl {
+  private createFormControlInternal(context: SFCreationContext, schema: SFProp, model?: SFModel): AbstractControl {
     switch (schema.type) {
 
       case 'array':
         const itemCount = model ? model.length : 0;
 
-        // initialize viewState
-        if (!viewState.hasOwnProperty('items')) {
-          viewState.items = [];
-        }
-        if (!viewState.hasOwnProperty('expanded')) {
-          viewState.expanded = isExpanded(schema);
-        }
-
         return new FormArray(
           Array.apply(null, {length: itemCount})
-            .map((_, idx) => {
-              if (!viewState.items.hasOwnProperty(idx)) {
-                viewState.items[idx] = {};
-              }
-              return this.createFormControlInternal(context, schema.items, viewState.items[idx], model[idx]);
-            })
+            .map((_, idx) => this.createFormControlInternal(context, schema.items, model[idx]))
         );
 
       case 'object':
-        if (!viewState.hasOwnProperty('expanded')) {
-          viewState.expanded = isExpanded(schema);
-        }
-        if (!viewState.hasOwnProperty('properties')) {
-          viewState.properties = {};
-        }
-
         const conditionalProps: {[propKey: string]: SFSchema} = {};
 
         const formGroup = new FormGroup(
           Object.entries(schema.properties)
             .reduce(
               (acc, [propKey, propSchema]) => {
-                if (!viewState.properties.hasOwnProperty(propKey)) {
-                  viewState.properties[propKey] = {};
-                }
-
                 if (propSchema.if) {
                   conditionalProps[propKey] = propSchema;
                   return acc;
@@ -185,7 +151,6 @@ export class SchemaFormBuilderService {
                   [propKey]: this.createFormControlInternal(
                     context,
                     propSchema,
-                    viewState.properties[propKey],
                     model ? model[propKey] : undefined
                   )
                 });

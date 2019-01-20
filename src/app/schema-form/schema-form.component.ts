@@ -75,20 +75,32 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
     }
 
     if (this.model && this.schema) {
-      // model available and schema available
-      this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, this.viewState, this.model) as FormGroup;
+      // model and schema available
+      this.rootControl = this.schemaFormBuilderService.createFormControl(this.schema, this.model) as FormGroup;
+
+      this.rootControl.patchValue(this.model);
 
       this.valueChangesSubscription = this.rootControl.valueChanges.subscribe(value => {
         this.dirtySignal.next(this.rootControl.dirty);
-        this.modelChangeSignal.next(collectModel(this.rootControl, this.schema));
+        this.publishModel();
       });
 
       this.statusChangesSubscription = this.rootControl.statusChanges.subscribe((status: FormControlStatus) => {
-        this.statusChangeSignal.next(status);
+        this.publishStatus(status);
       });
 
-      this.rootControl.patchValue(this.model);
+      // publish initial model and status once
+      this.publishModel();
+      this.publishStatus(this.rootControl.status as FormControlStatus);
     }
+  }
+
+  private publishModel(): void {
+    this.modelChangeSignal.next(collectModel(this.rootControl, this.schema));
+  }
+
+  private publishStatus(status: FormControlStatus): void {
+    this.statusChangeSignal.next(status);
   }
 
   private unsubscribeControlObservers(): void {

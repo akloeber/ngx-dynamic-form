@@ -67,6 +67,5 @@ export class AppComponent implements OnInit {
   }
 
   test() {
-    console.log('HERE', this.schemaFormEditor.viewState);
   }
 }

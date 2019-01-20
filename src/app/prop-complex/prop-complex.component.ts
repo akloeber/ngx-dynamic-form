@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {SFProp, SFPropComplex} from '../schema-types';
+import {isExpanded, SFProp, SFPropComplex} from '../schema-types';
 import {FormGroup} from '@angular/forms';
 import {collectModel} from '../form-utils';
 
@@ -44,6 +44,21 @@ export class PropComplexComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.viewState) {
+      if (!this.viewState.hasOwnProperty('expanded')) {
+        this.viewState.expanded = isExpanded(this.schema);
+      }
+      if (!this.viewState.hasOwnProperty('properties')) {
+        this.viewState.properties = {};
+      }
+
+      Object.keys(this.formGroup.controls).forEach(propKey => {
+        if (!this.viewState.properties.hasOwnProperty(propKey)) {
+          this.viewState.properties[propKey] = {};
+        }
+      });
+    }
+
     if (changes.schema) {
       this.properties = Object
         .entries(this.schema.properties)

@@ -6,9 +6,9 @@ import {AppComponent} from './app.component';
 import {PropSimpleComponent} from './prop-simple/prop-simple.component';
 import {PropArrayComponent} from './prop-array/prop-array.component';
 import {PropComplexComponent} from './prop-complex/prop-complex.component';
-import { AddressPickerComponent } from './address-picker/address-picker.component';
-import { SchemaFormComponent } from './schema-form/schema-form.component';
-import { ViewStateMonitorComponent } from './view-state-monitor/view-state-monitor.component';
+import {AddressPickerComponent} from './address-picker/address-picker.component';
+import {SchemaFormComponent} from './schema-form/schema-form.component';
+import {ObjectMonitorComponent} from './object-monitor/object-monitor.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { ViewStateMonitorComponent } from './view-state-monitor/view-state-monit
     PropComplexComponent,
     AddressPickerComponent,
     SchemaFormComponent,
-    ViewStateMonitorComponent,
+    ObjectMonitorComponent,
   ],
   imports: [
     BrowserModule,
