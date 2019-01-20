@@ -108,8 +108,6 @@ export class SchemaFormBuilderService {
         rootControl.get(propPath).valueChanges.subscribe(() => {
           if (SchemaFormBuilderService.checkIfOnControl(condition, rootControl)) {
             if (!prop.parent.contains(prop.propKey)) {
-              // TODO: unregister observer
-
               prop.parent.addControl(prop.propKey, this.createFormControlInternal(new SFCreationContext(), prop.propSchema));
             }
           } else {
