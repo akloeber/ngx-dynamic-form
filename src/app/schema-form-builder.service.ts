@@ -109,7 +109,8 @@ export class SchemaFormBuilderService {
           if (SchemaFormBuilderService.checkIfOnControl(condition, rootControl)) {
             if (!prop.parent.contains(prop.propKey)) {
               // TODO: unregister observer
-              prop.parent.addControl(prop.propKey, this.createFormControlInternal(new SFCreationContext(), prop.propSchema, {}));
+
+              prop.parent.addControl(prop.propKey, this.createFormControlInternal(new SFCreationContext(), prop.propSchema));
             }
           } else {
             if (prop.parent.contains(prop.propKey)) {
@@ -166,7 +167,9 @@ export class SchemaFormBuilderService {
       default:
         const propSimple = schema as SFPropSimple;
         const validators = SchemaFormBuilderService.getValidators(propSimple);
-        return new FormControl({value: propSimple.default || null, disabled: isReadonly(propSimple)}, validators);
+        const initialValue = model !== undefined ? model : propSimple.default || null;
+
+        return new FormControl({value: initialValue, disabled: isReadonly(propSimple)}, validators);
     }
   }
 }

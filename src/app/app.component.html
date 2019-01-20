@@ -18,6 +18,7 @@
 <section>
   <app-schema-form
     #editor
+    id="editor"
     [schema]="schema"
     [model]="initialModel"
     [readonlyMode]="readonlyMode"
@@ -25,14 +26,15 @@
     (statusChanged)="onStatusChanged($event)"
   >
   </app-schema-form>
-  <!--app-schema-form
+  <app-schema-form
     #view
+    id="view"
     [schema]="schema"
     [model]="readonlyModel"
     [readonlyMode]="true"
     [hideEmpty]="hideEmpty"
   >
-  </app-schema-form-->
+  </app-schema-form>
   <app-object-monitor header="Initial model" [obj]="initialModel"></app-object-monitor>
   <app-object-monitor header="Form model" [obj]="formModel"></app-object-monitor>
   <app-object-monitor header="View state" [obj]="schemaFormEditor.viewState"></app-object-monitor>

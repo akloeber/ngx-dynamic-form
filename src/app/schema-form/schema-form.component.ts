@@ -19,6 +19,7 @@ function connectEventEmitter<T>(o: Observable<T>, e: EventEmitter<T>): Subscript
 })
 export class SchemaFormComponent implements OnChanges, OnDestroy {
 
+  @Input() id: string;
   @Input() schema: SFSchema;
   @Input() model: SFModel = null;
   @Input() readonlyMode = false;
