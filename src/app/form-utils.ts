@@ -22,7 +22,7 @@ export function collectErrors(control: AbstractControl): any | null {
         (acc, [key, childControl]) => {
           const childErrors = collectErrors(childControl);
           if (childErrors) {
-            acc = {[key]: childErrors, ...acc};
+            acc = {...acc, [key]: childErrors};
           }
           return acc;
         },
@@ -49,7 +49,7 @@ export function collectModel(control: AbstractControl, schema: SFSchema): SFMode
       return Object.entries((control as FormGroup).controls)
         .reduce((acc, [propKey, propControl]) => {
           const propValue = collectModel(propControl, schema.properties[propKey]);
-          return propValue !== null ? {[propKey]: propValue, ...acc} : acc;
+          return propValue !== null ? {...acc, [propKey]: propValue} : acc;
         }, null);
     default:
       return collectSimpleValue(control as FormControl, schema);
