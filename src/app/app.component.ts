@@ -67,6 +67,6 @@ export class AppComponent implements OnInit {
   }
 
   test() {
-    console.log('HERE', this.schemaFormEditor.rootControl.dirty);
+    console.log('HERE', this.schemaFormEditor.viewState);
   }
 }

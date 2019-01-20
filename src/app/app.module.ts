@@ -8,6 +8,7 @@ import {PropArrayComponent} from './prop-array/prop-array.component';
 import {PropComplexComponent} from './prop-complex/prop-complex.component';
 import { AddressPickerComponent } from './address-picker/address-picker.component';
 import { SchemaFormComponent } from './schema-form/schema-form.component';
+import { ViewStateMonitorComponent } from './view-state-monitor/view-state-monitor.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { SchemaFormComponent } from './schema-form/schema-form.component';
     PropComplexComponent,
     AddressPickerComponent,
     SchemaFormComponent,
+    ViewStateMonitorComponent,
   ],
   imports: [
     BrowserModule,

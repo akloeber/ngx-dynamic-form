@@ -73,7 +73,7 @@ export class PropComplexComponent implements OnChanges {
 
     const control = this.formGroup.get(prop.key);
     if (!control) {
-      return true;
+      return true; // conditional property is missing
     }
 
     if (this.hideEmpty && collectModel(control, prop.schema) === null) {
