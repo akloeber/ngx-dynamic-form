@@ -17,7 +17,7 @@ interface PropDescriptor {
 @Component({
   selector: 'app-prop-complex',
   templateUrl: './prop-complex.component.html',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropComplexComponent implements OnChanges {
 
