@@ -14,7 +14,6 @@ import {
   SFSchema
 } from './schema-types';
 import {AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {CustomValidators} from 'src/app/custom-validators';
 import {get} from 'lodash-es';
 
 class SFCreationContext {
@@ -81,12 +80,12 @@ export class SchemaFormBuilderService {
       case 'multi-select':
         const minOccurs = getMinOccurs(schema);
         if (minOccurs > 0) {
-          validators.push(CustomValidators.minItems(minOccurs));
+          validators.push(Validators.minLength(minOccurs));
         }
 
         const maxOccurs = getMaxOccurs(schema);
         if (maxOccurs < Number.POSITIVE_INFINITY) {
-          validators.push(CustomValidators.maxItems(maxOccurs));
+          validators.push(Validators.maxLength(minOccurs));
         }
 
         break;
