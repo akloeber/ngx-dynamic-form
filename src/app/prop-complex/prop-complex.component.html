@@ -20,7 +20,7 @@
           [key]="prop.key"
           [readonlyMode]="readonlyMode"
           [schema]="prop.schema"
-          [viewState]="viewState.properties[prop.key]"
+          [viewState]="getViewState(prop.key)"
         ></app-prop-simple>
         <app-prop-array
           *ngSwitchCase="'ARRAY'"
@@ -28,7 +28,7 @@
           [readonlyMode]="readonlyMode"
           [hideEmpty]="hideEmpty"
           [schema]="prop.schema"
-          [viewState]="viewState.properties[prop.key]"
+          [viewState]="getViewState(prop.key)"
         ></app-prop-array>
         <app-prop-complex
           *ngSwitchCase="'COMPLEX'"
@@ -36,7 +36,7 @@
           [readonlyMode]="readonlyMode"
           [hideEmpty]="hideEmpty"
           [schema]="prop.schema"
-          [viewState]="viewState.properties[prop.key]"
+          [viewState]="getViewState(prop.key)"
         ></app-prop-complex>
       </li>
     </ng-template>

@@ -51,12 +51,6 @@ export class PropComplexComponent implements OnChanges {
       if (!this.viewState.hasOwnProperty('properties')) {
         this.viewState.properties = {};
       }
-
-      Object.keys(this.formGroup.controls).forEach(propKey => {
-        if (!this.viewState.properties.hasOwnProperty(propKey)) {
-          this.viewState.properties[propKey] = {};
-        }
-      });
     }
 
     if (changes.schema) {
@@ -100,5 +94,14 @@ export class PropComplexComponent implements OnChanges {
 
   trackByKey(index: number, item: PropDescriptor): string {
     return item.key;
+  }
+
+  getViewState(key: string) {
+    let state = this.viewState.properties[key];
+    if (!state) {
+      state = this.viewState.properties[key] = {};
+    }
+
+    return state;
   }
 }
