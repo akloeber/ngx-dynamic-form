@@ -3,6 +3,12 @@
 // TODO: move filter config for control into config
 // TODO: use oneOf insteaof anyOf for radio groups / choices
 
+import {PropArrayViewState} from 'src/app/prop-array/prop-array-view-state';
+import {PropSimpleViewState} from 'src/app/prop-simple/prop-simple-view-state';
+import {PropComplexViewState} from 'src/app/prop-complex/prop-complex-view-state';
+
+export type SFPropViewState = PropComplexViewState | PropArrayViewState | PropSimpleViewState;
+
 export type SFProp =
   SFPropSimple |
   SFPropArray |

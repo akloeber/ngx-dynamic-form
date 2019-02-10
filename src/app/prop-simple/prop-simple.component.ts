@@ -1,46 +1,40 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {getInputType, getMaxLength, isReadonly, isRequired, SFInputType, SFPropSimple} from '../schema-types';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormControlStatus} from '../form-utils';
 import {Subscription} from 'rxjs';
+import {PropSimpleViewState} from 'src/app/prop-simple/prop-simple-view-state';
 
 @Component({
   selector: 'app-prop-simple',
   templateUrl: './prop-simple.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PropSimpleComponent implements OnChanges, OnDestroy {
+export class PropSimpleComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input() formGroup: FormGroup;
   @Input() key: string;
   @Input() schema: SFPropSimple;
-  @Input() viewState: {
-    readonly?: boolean;
-  };
+  @Input() viewState: PropSimpleViewState;
   @Input() readonlyMode?: boolean;
 
   maxLength: number;
   description: string;
 
-  private statusChangeSubscription: Subscription;
+  private viewStateReadonlySubscription: Subscription;
 
   get inputType(): SFInputType {
     return getInputType(this.schema);
   }
 
-  get formControl(): FormControl {
-    return this.formGroup.get(this.key) as FormControl;
+  get disabledAttr(): boolean | undefined {
+    return isReadonly(this.schema) || this.readonlyMode || this.viewState.readonly.value || undefined;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.statusChangeSubscription) {
-      // initialize view state for readonly and register observer to keep in-sync
-      this.updateReadonlyViewState(this.formControl.status as FormControlStatus);
-      this.statusChangeSubscription = this.formControl.statusChanges.subscribe(
-        status => this.updateReadonlyViewState(status)
-      );
-    }
+  constructor(private cd: ChangeDetectorRef) {}
 
+
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.schema) {
       const maxLength = getMaxLength(this.schema);
       this.maxLength = maxLength < Number.POSITIVE_INFINITY ? maxLength : undefined;
@@ -50,47 +44,15 @@ export class PropSimpleComponent implements OnChanges, OnDestroy {
         this.description += ' *';
       }
     }
+  }
 
-    if (changes.schema || changes.readonlyMode || changes.viewState) {
-      this.updateReadonly();
-    }
+  ngOnInit(): void {
+    this.viewStateReadonlySubscription = this.viewState.readonly.subscribe(() =>  this.cd.markForCheck());
   }
 
   ngOnDestroy(): void {
-    this.statusChangeSubscription.unsubscribe();
-  }
-
-  private disable(): void {
-    if (!this.formControl.disabled) {
-      this.formControl.disable();
-    }
-  }
-
-  private enable(): void {
-    if (this.formControl.disabled) {
-      this.formControl.enable();
-    }
-  }
-
-  private updateReadonly(): void {
-    if (this.evaluateReadonly()) {
-      this.disable();
-    } else {
-      this.enable();
-    }
-  }
-
-  private evaluateReadonly(): boolean {
-    return isReadonly(this.schema) || this.readonlyMode || this.viewState.readonly;
-  }
-
-  private updateReadonlyViewState(status: FormControlStatus) {
-    if (status === FormControlStatus.DISABLED && !this.readonlyMode) {
-      // only persist readonly state if not induced by readonly mode but dedicated disable operations
-      this.viewState.readonly = true;
-    }
-    if (status !== FormControlStatus.DISABLED) {
-      delete this.viewState.readonly;
+    if (this.viewStateReadonlySubscription) {
+      this.viewStateReadonlySubscription.unsubscribe();
     }
   }
 }

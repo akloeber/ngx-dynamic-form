@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {FormControlState} from '../form-utils';
+import {get, set} from 'lodash-es';
+import {getOrCreateViewState} from 'src/app/view-state-accessor';
+import {SFProp} from 'src/app/schema-types';
 
 @Component({
   selector: 'app-address-picker',
@@ -12,6 +14,8 @@ export class AddressPickerComponent implements OnInit {
     mapping: Record<string, string>;
   };
   @Input() formGroup: FormGroup;
+  @Input() schema: SFProp;
+  @Input() viewState: any;
 
   get linked() {
     return this.formGroup.get(this.config.mapping.id).value !== null;
@@ -31,26 +35,15 @@ export class AddressPickerComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.linked) {
-      this.updateFormControlState(FormControlState.DISABLED);
+      this.updateFormControlReadonly(true);
     }
   }
 
-  private updateFormControlState(state: FormControlState) {
+  private updateFormControlReadonly(readonly: boolean) {
     Object.entries(this.config.mapping)
       .forEach(([field, target]) => {
-        const control = this.formGroup.get(target);
-        // NOTE:
-        // - emitEvent = true is necessary so that obj.readonly can be kept in-sync
-        // - onlySelf = true is necessary to prevent valueChange events for every single field
-        if (state === FormControlState.DISABLED) {
-          if (control.enabled) {
-            control.disable({emitEvent: true, onlySelf: true});
-          }
-        } else {
-          if (control.disabled) {
-            control.enable({emitEvent: true, onlySelf: true});
-          }
-        }
+        const viewState = getOrCreateViewState(this.viewState, target.split('.'));
+        viewState.readonly.next(readonly);
       });
   }
 
@@ -60,13 +53,13 @@ export class AddressPickerComponent implements OnInit {
         const control = this.formGroup.get(target);
         control.setValue(address[field], {emitEvent: false});
       });
-    this.updateFormControlState(FormControlState.DISABLED);
+    this.updateFormControlReadonly(true);
     this.formGroup.markAsDirty();
     this.formGroup.updateValueAndValidity();
   }
 
   private unlink() {
-    this.updateFormControlState(FormControlState.ENABLED);
+    this.updateFormControlReadonly(false);
     this.formGroup.get(this.config.mapping.id).setValue(null, {emitEvent: false});
     this.formGroup.markAsDirty();
     this.formGroup.updateValueAndValidity();

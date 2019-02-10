@@ -1,11 +1,15 @@
 <ng-container [formGroup]="formArray">
   <h3 [attr.title]="schema.explanation">
-    <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
+    <input type="checkbox"
+           [ngModel]="viewState.expanded | async"
+           [ngModelOptions]="{standalone: true}"
+           (ngModelChange)="viewState.expanded.next($event)"
+    />
     {{schema.description}}
     <button *ngIf="!readonlyMode" (click)="addItem()" [disabled]="formArray.length >= maxOccurs">Add</button>
     <button *ngIf="!readonlyMode && minOccurs === 0" (click)="clearItems()" [disabled]="formArray.length == 0">Clear</button>
   </h3>
-  <ul *ngIf="viewState.expanded">
+  <ul *ngIf="viewState.expanded | async">
     <ng-container *ngFor="let item of formArray.controls; let idx=index">
       <li *ngIf="showItem(item)">
         <app-prop-complex
@@ -13,7 +17,7 @@
           [index]="idx"
           [schema]="schema.items"
           [readonlyMode]="readonlyMode"
-          [viewState]="viewState.items[idx]"
+          [viewState]="viewStateForItem(idx)"
         >
           <button *ngIf="!readonlyMode" (click)="removeItem(idx)" [disabled]="formArray.length <= minOccurs">
             Remove {{formArray.length}} {{minOccurs}}

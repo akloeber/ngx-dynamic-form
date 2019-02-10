@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {SFModel, SFSchema} from '../schema-types';
+import {SFModel, SFPropComplex, SFSchema} from '../schema-types';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {collectModel, FormControlStatus} from '../form-utils';
+import {collectErrors, collectModel, FormControlStatus} from '../form-utils';
+import {PropComplexViewState} from 'src/app/prop-complex/prop-complex-view-state';
 
 function connectEventEmitter<T>(o: Observable<T>, e: EventEmitter<T>): Subscription {
   return o.subscribe(
@@ -30,7 +31,7 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
   @Output() modelChanged = new EventEmitter<SFModel>(true);
 
   rootControl: FormGroup | null = null;
-  viewState: any = {};
+  viewState: PropComplexViewState | null;
   private dirtySignal = new BehaviorSubject<boolean>(false);
   private statusChangeSignal = new BehaviorSubject<FormControlStatus>(null);
   private modelChangeSignal = new BehaviorSubject<any>(null);
@@ -51,7 +52,11 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.schema) {
-      this.viewState = {}; // reset view state
+      if (this.schema) {
+        this.viewState = new PropComplexViewState(this.schema as SFPropComplex); // reset view state
+      } else {
+        this.viewState = null;
+      }
     }
 
     if (changes.model || changes.schema) {
@@ -113,5 +118,9 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
       this.statusChangesSubscription.unsubscribe();
       this.statusChangesSubscription = null;
     }
+  }
+
+  collectErrors(): any | null {
+    return collectErrors(this.rootControl);
   }
 }
