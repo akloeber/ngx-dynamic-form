@@ -44,7 +44,6 @@ export class PropArrayComponent implements OnChanges {
 
   removeItem(idx: number) {
     this.formArray.removeAt(idx);
-    this.viewState.items.splice(idx, 1);
   }
 
   addItem() {
