@@ -33,32 +33,53 @@ export function collectErrors(control: AbstractControl): any | null {
   }
 }
 
-export function collectModel(control: AbstractControl, schema: SFSchema): SFModel {
+// Symbol that represents a value that must never be included in model.
+// This is necessary to distinguish from <null> and <undefined> which are allowed model values if collapse === <false>.
+const NA = Symbol('N/A');
+const MODEL_FOR_EMPTY_ARRAY = null;
+const MODEL_FOR_EMPTY_OBJECT = null;
+
+export function collectModel(control: AbstractControl, schema: SFSchema, collapse = true): SFModel | null {
+  const model = collectModelInternal(control, schema, collapse);
+  return model !== NA ? model : null;
+}
+
+function collectModelInternal(control: AbstractControl, schema: SFSchema, collapse = true): SFModel {
   if (schema.transient) {
-    return null;
+    return NA;
   }
 
   switch (schema.type) {
     case 'array':
       return (control as FormArray).controls
         .reduce((acc, childControl) => {
-          const propValue = collectModel(childControl, schema.items);
-          return propValue !== null ? [...(acc || []), propValue] : acc;
-        }, null as Array<any>);
+          const collapsedItemModel = collectModelInternal(childControl, schema.items, true);
+
+          if (collapsedItemModel === NA) {
+            return acc; // item is not filled
+          }
+
+          const propValue = collapse ? collapsedItemModel : collectModelInternal(childControl, schema.items, false);
+          return Array.isArray(acc) ? [...acc, propValue] : [propValue];
+        }, collapse ? NA : MODEL_FOR_EMPTY_ARRAY);
     case 'object':
       return Object.entries((control as FormGroup).controls)
         .reduce((acc, [propKey, propControl]) => {
-          const propValue = collectModel(propControl, schema.properties[propKey]);
-          return propValue !== null ? {...acc, [propKey]: propValue} : acc;
-        }, null);
+          const propValue = collectModelInternal(propControl, schema.properties[propKey], collapse);
+          if (propValue !== NA) {
+            return (acc as Object instanceof Object) ? {...(acc as Object), [propKey]: propValue} : {[propKey]: propValue} ;
+          } else {
+            return acc;
+          }
+        }, collapse ? NA : MODEL_FOR_EMPTY_OBJECT);
     default:
-      return collectSimpleValue(control as FormControl, schema);
+      return collectSimpleValue(control as FormControl, schema, collapse);
   }
 }
 
-function collectSimpleValue(control: FormControl, schema: SFSchema): SFModel {
+function collectSimpleValue(control: FormControl, schema: SFSchema, collapse: boolean): SFModel {
   if (control.value == null || control.value === '') {
-    return null;
+    return collapse ? NA : null;
   }
   return control.value;
 }

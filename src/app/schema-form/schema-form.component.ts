@@ -97,7 +97,7 @@ export class SchemaFormComponent implements OnChanges, OnDestroy {
   }
 
   private publishModel(): void {
-    this.modelChangeSignal.next(collectModel(this.rootControl, this.schema));
+    this.modelChangeSignal.next(collectModel(this.rootControl, this.schema, false));
   }
 
   private publishStatus(status: FormControlStatus): void {
