@@ -39,6 +39,9 @@ export class AppComponent implements OnInit {
     });
     this.schemaFormEditor.statusChanged.subscribe(status => {
       console.log('statusChanged event', status);
+      if (status === FormControlStatus.INVALID) {
+        console.log('errors', this.schemaFormEditor.collectErrors());
+      }
     });
     this.schemaFormEditor.modelChanged.subscribe(model => {
       console.log('modelChanged event', model);
@@ -63,7 +66,8 @@ export class AppComponent implements OnInit {
   }
 
   onShowErrors() {
-    alert(JSON.stringify(collectErrors(this.schemaFormEditor.rootControl), null, 2));
+    const errors = this.schemaFormEditor.collectErrors();
+    alert(errors ? JSON.stringify(errors, null, 2) : 'OK');
   }
 
   test() {

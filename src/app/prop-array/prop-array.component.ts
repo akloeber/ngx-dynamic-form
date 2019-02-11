@@ -1,8 +1,10 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {getMaxOccurs, getMinOccurs, isExpanded, SFPropArray} from '../schema-types';
+import {getMaxOccurs, getMinOccurs, SFPropArray} from '../schema-types';
 import {AbstractControl, FormArray} from '@angular/forms';
 import {SchemaFormBuilderService} from '../schema-form-builder.service';
 import {collectModel} from '../form-utils';
+import {PropArrayViewState} from 'src/app/prop-array/prop-array-view-state';
+import {getOrCreateViewState} from 'src/app/view-state-accessor';
 
 @Component({
   selector: 'app-prop-array',
@@ -13,10 +15,7 @@ export class PropArrayComponent implements OnChanges {
 
   @Input() formArray: FormArray;
   @Input() schema: SFPropArray;
-  @Input() viewState: Partial<{
-    expanded: boolean;
-    items: Array<any>;
-  }>;
+  @Input() viewState: PropArrayViewState;
   @Input() readonlyMode?: boolean;
   @Input() hideEmpty?: boolean;
 
@@ -27,21 +26,6 @@ export class PropArrayComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.viewState) {
-      if (!this.viewState.hasOwnProperty('items')) {
-        this.viewState.items = [];
-      }
-      if (!this.viewState.hasOwnProperty('expanded')) {
-        this.viewState.expanded = isExpanded(this.schema);
-      }
-
-      for (let idx = 0; idx < this.formArray.length; idx++) {
-        if (!this.viewState.items.hasOwnProperty(idx)) {
-          this.viewState.items[idx] = {};
-        }
-      }
-    }
-
     if (changes.schema) {
       this.maxOccurs = getMaxOccurs(this.schema);
       this.minOccurs = getMinOccurs(this.schema);
@@ -60,12 +44,9 @@ export class PropArrayComponent implements OnChanges {
 
   removeItem(idx: number) {
     this.formArray.removeAt(idx);
-    this.viewState.items.splice(idx, 1);
   }
 
   addItem() {
-    const itemViewState = {};
-    this.viewState.items.push(itemViewState);
     this.formArray.push(this.schemaFormBuilderService.createFormControl(this.schema.items, undefined));
   }
 
@@ -77,6 +58,9 @@ export class PropArrayComponent implements OnChanges {
     while (this.formArray.length) {
       this.formArray.removeAt(0);
     }
-    this.viewState.items = [];
+  }
+
+  viewStateForItem(idx: number) {
+    return getOrCreateViewState(this.viewState, [idx]);
   }
 }

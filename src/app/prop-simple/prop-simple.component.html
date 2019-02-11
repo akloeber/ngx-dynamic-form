@@ -2,28 +2,28 @@
   <label [for]="key">{{description}}</label>
   <ng-container [ngSwitch]="inputType">
 
-    <input *ngSwitchCase="'hidden'" [formControlName]="key" [id]="key" type="hidden"/>
+    <input *ngSwitchCase="'hidden'" [formControlName]="key" [id]="key" [attr.disabled]="disabledAttr" type="hidden"/>
 
-    <input *ngSwitchCase="'number'" [formControlName]="key" [id]="key" type="number"/>
+    <input *ngSwitchCase="'number'" [formControlName]="key" [id]="key" [attr.disabled]="disabledAttr" type="number"/>
 
-    <input *ngSwitchCase="'date'" [formControlName]="key" [id]="key" type="date"/>
+    <input *ngSwitchCase="'date'" [formControlName]="key" [id]="key" [attr.disabled]="disabledAttr" type="date"/>
 
     <ng-container *ngSwitchCase="'radio'">
       <ng-template [ngForOf]="schema.oneOf || schema.anyOf" let-option let-id="index" ngFor>
-        <input  [formControlName]="key" [id]="key + id" type="radio" [value]="option.value"/>
+        <input  [formControlName]="key" [id]="key + id" type="radio" [attr.disabled]="disabledAttr" [value]="option.value"/>
         <label [for]="key + id">{{option.text}}</label>
       </ng-template>
     </ng-container>
 
-    <select *ngSwitchCase="'select'" [formControlName]="key">
+    <select *ngSwitchCase="'select'" [formControlName]="key" [attr.disabled]="disabledAttr">
       <option *ngFor="let option of schema.anyOf" [ngValue]="option.value">{{option.text}}</option>
     </select>
 
-    <select *ngSwitchCase="'multi-select'" [formControlName]="key" multiple>
+    <select *ngSwitchCase="'multi-select'" [formControlName]="key" [attr.disabled]="disabledAttr" multiple>
       <option *ngFor="let option of schema.anyOf" [ngValue]="option.value">{{option.text}}</option>
     </select>
 
-    <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" [pattern]="schema.pattern" type="text"/>
+    <input *ngSwitchDefault [attr.maxlength]="maxLength" [formControlName]="key" [id]="key" [attr.disabled]="disabledAttr" [pattern]="schema.pattern" type="text"/>
 
   </ng-container>
 </div>

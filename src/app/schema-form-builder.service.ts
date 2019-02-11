@@ -166,7 +166,7 @@ export class SchemaFormBuilderService {
         const validators = SchemaFormBuilderService.getValidators(propSimple);
         const initialValue = model !== undefined ? model : propSimple.default || null;
 
-        return new FormControl({value: initialValue, disabled: isReadonly(propSimple)}, validators);
+        return new FormControl(initialValue, validators);
     }
   }
 }

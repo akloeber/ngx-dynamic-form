@@ -1,17 +1,20 @@
 <ng-container [formGroup]="formGroup">
   <h3 [attr.title]="schema.explanation">
-    <input [(ngModel)]="viewState.expanded" [ngModelOptions]="{standalone: true}" type="checkbox"/>
+    <input type="checkbox"
+      [ngModel]="viewState.expanded | async"
+      [ngModelOptions]="{standalone: true}"
+      (ngModelChange)="viewState.expanded.next($event)"/>
     {{description}}
     <ng-container *ngIf="!readonlyMode">
       <ng-template [ngForOf]="schema.controls" let-control ngFor>
         <ng-container [ngSwitch]="control.type">
-          <app-address-picker *ngSwitchCase="'AddressPicker'" [formGroup]="formGroup" [config]="control.config"></app-address-picker>
+          <app-address-picker *ngSwitchCase="'AddressPicker'" [formGroup]="formGroup" [viewState]="viewState" [schema]="schema" [config]="control.config"></app-address-picker>
         </ng-container>
       </ng-template>
     </ng-container>
     <ng-content select="button"></ng-content>
   </h3>
-  <ul *ngIf="viewState.expanded">
+  <ul *ngIf="viewState.expanded | async">
     <ng-template [ngForOf]="properties" [ngForTrackBy]="trackByKey" let-prop ngFor>
       <li *ngIf="widgetForProperty(prop) as widget" [ngSwitch]="widget">
         <app-prop-simple
@@ -20,7 +23,7 @@
           [key]="prop.key"
           [readonlyMode]="readonlyMode"
           [schema]="prop.schema"
-          [viewState]="getViewState(prop.key)"
+          [viewState]="viewStateForProp(prop.key)"
         ></app-prop-simple>
         <app-prop-array
           *ngSwitchCase="'ARRAY'"
@@ -28,7 +31,7 @@
           [readonlyMode]="readonlyMode"
           [hideEmpty]="hideEmpty"
           [schema]="prop.schema"
-          [viewState]="getViewState(prop.key)"
+          [viewState]="viewStateForProp(prop.key)"
         ></app-prop-array>
         <app-prop-complex
           *ngSwitchCase="'COMPLEX'"
@@ -36,7 +39,7 @@
           [readonlyMode]="readonlyMode"
           [hideEmpty]="hideEmpty"
           [schema]="prop.schema"
-          [viewState]="getViewState(prop.key)"
+          [viewState]="viewStateForProp(prop.key)"
         ></app-prop-complex>
       </li>
     </ng-template>
